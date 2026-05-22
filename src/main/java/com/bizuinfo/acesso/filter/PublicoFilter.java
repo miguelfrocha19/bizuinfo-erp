@@ -32,10 +32,10 @@ public class PublicoFilter implements Filter {
 
             String destino;
 
-            if (usuario.getRoles().contains(Role.ADMIN)) {
+            if (usuario.getRole() == Role.ADMIN) {
                 destino = Paginas.DASHBOARD_ADMIN;
 
-            } else if (usuario.getRoles().contains(Role.GERENTE)) {
+            } else if (usuario.getRole() == Role.GERENTE) {
                 destino = Paginas.DASHBOARD_GERENTE;
 
             } else {

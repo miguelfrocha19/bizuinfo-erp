@@ -23,14 +23,9 @@ public class Usuario {
     @Column(name = "senha", nullable = false)
     private String senha;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "usuario_roles",
-            joinColumns = @JoinColumn(name = "usuario_id")
-    )
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Set<Role> roles = new HashSet<>();
+    private Role role = Role.FUNCIONARIO;
 
     @Column(name = "email_verificado", nullable = false)
     private boolean emailVerificado = false;
@@ -38,19 +33,12 @@ public class Usuario {
     @Column(name = "token_verificacao")
     private String tokenVerificacao;
 
-    @Column(name = "token_verificacao_expiracao")
-    private LocalDateTime tokenVerificacaoExpiracao;
+    @Column(name = "token_expiracao")
+    private LocalDateTime tokenExpiracao;
 
     // Recuperação de acesso
-    @Column(name = "token_recuperacao")
-    private String tokenRecuperacao;
-
-    @Column(name = "token_recuperacao_expiracao")
-    private LocalDateTime tokenRecuperacaoExpiracao;
-
-    // Controle de reenvio
-    @Column(name = "token_ultimo_envio")
-    private LocalDateTime ultimoEnvioToken;
+    @Column(name = "token_reset")
+    private String tokenReset;
 
     // Construtor JPA
     public Usuario() {}
@@ -62,7 +50,7 @@ public class Usuario {
         this.email = email;
         this.senha = senha;
         this.emailVerificado = false;
-        this.roles.add(Role.FUNCIONARIO);
+        this.role = Role.FUNCIONARIO;
 
     }
 
@@ -71,23 +59,19 @@ public class Usuario {
     public String getNome() { return nome; }
     public String getEmail() { return email; }
     public String getSenha() { return senha; }
-    public Set<Role> getRoles() { return roles; }
+    public Role getRole() { return role; }
     public boolean getEmailVerificado() { return emailVerificado; }
     public String getTokenVerificacao() { return tokenVerificacao; }
-    public LocalDateTime getTokenVerificacaoExpiracao() { return tokenVerificacaoExpiracao; }
-    public String getTokenRecuperacao() { return tokenRecuperacao; }
-    public LocalDateTime getTokenRecuperacaoExpiracao() { return tokenRecuperacaoExpiracao; }
-    public LocalDateTime getUltimoEnvioToken() { return ultimoEnvioToken; }
+    public LocalDateTime getTokenExpiracao() { return tokenExpiracao; }
+    public String getTokenReset() { return tokenReset; }
 
     // Setters
     public void setNome(String nome) { this.nome = nome; }
     public void setEmail(String email) { this.email = email; }
     public void setSenha(String senha) { this.senha = senha; }
-    public void setRoles(Set<Role> roles) { this.roles = roles; }
+    public void setRole(Role role) { this.role = role; }
     public void setEmailVerificado(boolean emailVerificado) { this.emailVerificado = emailVerificado; }
     public void setTokenVerificacao(String tokenVerificacao) { this.tokenVerificacao = tokenVerificacao; }
-    public void setTokenVerificacaoExpiracao(LocalDateTime expiracao) { this.tokenVerificacaoExpiracao = expiracao; }
-    public void setTokenRecuperacao(String tokenRecuperacao) { this.tokenRecuperacao = tokenRecuperacao; }
-    public void setTokenRecuperacaoExpiracao(LocalDateTime expiracao) { this.tokenRecuperacaoExpiracao = expiracao; }
-    public void setUltimoEnvioToken(LocalDateTime t) { this.ultimoEnvioToken = t; }
+    public void setTokenExpiracao(LocalDateTime expiracao) { this.tokenExpiracao = expiracao; }
+    public void setTokenReset(String tokenReset) { this.tokenReset = tokenReset; }
 }

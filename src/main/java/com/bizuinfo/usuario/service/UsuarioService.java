@@ -37,7 +37,7 @@ public class UsuarioService {
 
         Role role = Role.valueOf(novaRole);
 
-        usuario.getRoles().add(role);
+        usuario.setRole(role);
 
         uDAO.salvar(usuario);
     }

@@ -5,11 +5,13 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import com.bizuinfo.usuario.dao.UsuarioDAO;
+import com.bizuinfo.usuario.model.Role;
 import com.bizuinfo.usuario.model.Usuario;
 import com.bizuinfo.web.Paginas;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -24,7 +26,7 @@ public class LoginBean implements Serializable {
 
     private String email;
     private String senha;
-
+    private String mensagemLogin;
     private Usuario usuarioLogado;
 
     @Inject
@@ -35,38 +37,49 @@ public class LoginBean implements Serializable {
         Optional<Usuario> usuarioOptional = usuarioDAO.buscarPorEmail(email);
 
         if (usuarioOptional.isEmpty()) {
-            // Dica: Adicione uma mensagem de erro ao FacesContext para o usuário saber que falhou
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, new FacesMessage("Email não cadastrado"));
             return null;
         }
 
         Usuario usuario = usuarioOptional.get();
-        boolean senhaCorreta = BCrypt.checkpw(senha, usuario.getSenha());
+
+        boolean senhaCorreta;
+        try {
+            senhaCorreta = BCrypt.checkpw(senha, usuario.getSenha());
+        } catch (Exception e) {
+            senhaCorreta = false;
+        }
 
         if (!senhaCorreta) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, new FacesMessage("Senha inválida"));
             return null;
         }
 
-        if (!usuario.getEmailVerificado()) {
-            return Paginas.CONFIRMAR_EMAIL + "?faces-redirect=true";
-        }
-
-        // --- AQUI ESTÁ O QUE FALTAVA ---
-        this.usuarioLogado = usuario;
-        // -------------------------------
+        usuarioLogado = usuario;
 
         FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getSessionMap()
                 .put("usuario", usuario);
 
-        return Paginas.DASHBOARD + "?faces-redirect=true";
+        if (usuario.getRole() == Role.ADMIN) {
+            return "/restrito/app/admin/usuarios_admin.xhtml?faces-redirect=true";
+        }
+
+        if (usuario.getRole() == Role.GERENTE) {
+            return "/restrito/app/gerente/dashboard_gerente.xhtml?faces-redirect=true";
+        }
+
+        return "/restrito/app/funcionario/dashboard.xhtml?faces-redirect=true";
     }
 
     public String sair() {
 
         FacesContext.getCurrentInstance()
-                    .getExternalContext()
-                    .invalidateSession();
+                .getExternalContext()
+                .invalidateSession();
 
         return Paginas.LOGIN + "?faces-redirect=true";
     }
@@ -77,9 +90,10 @@ public class LoginBean implements Serializable {
 
     public void setEmail(String email) { this.email = email; }
     public void setSenha(String senha) { this.senha = senha; }
-    public void setUsuarioLogado (Usuario u) { usuarioLogado = u; }
+    public void setUsuarioLogado(Usuario u) { this.usuarioLogado = u; }
 
     public String getSenha() { return senha; }
     public String getEmail() { return email; }
+    public String getMensagemLogin() { return mensagemLogin; }
     public Usuario getUsuarioLogado() { return usuarioLogado; }
 }

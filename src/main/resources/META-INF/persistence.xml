@@ -10,33 +10,27 @@
         <class>com.bizuinfo.usuario.model.Usuario</class>
 
         <properties>
-
             <!-- MYSQL -->
             <property name="jakarta.persistence.jdbc.driver"
                       value="com.mysql.cj.jdbc.Driver"/>
 
+            <!-- URL correta dentro do Docker -->
             <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:mysql://localhost:3306/bizuinfo_db?createDatabaseIfNotExist=true&amp;serverTimezone=UTC"/>
-
+                      value="jdbc:mysql://bizuinfo-db:3306/bizuinfo_db?serverTimezone=UTC"/>
             <property name="jakarta.persistence.jdbc.user"
                       value="bizuinfo_user"/>
-
             <property name="jakarta.persistence.jdbc.password"
                       value="bizuinfo_pass"/>
 
             <!-- HIBERNATE -->
             <property name="hibernate.dialect"
                       value="org.hibernate.dialect.MySQLDialect"/>
-
             <property name="hibernate.hbm2ddl.auto"
                       value="update"/>
-
             <property name="hibernate.show_sql"
                       value="true"/>
-
             <property name="hibernate.format_sql"
                       value="true"/>
-
         </properties>
 
     </persistence-unit>

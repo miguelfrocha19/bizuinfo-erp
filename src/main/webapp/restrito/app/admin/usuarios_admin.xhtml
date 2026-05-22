@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
 
 <h:head>
     <title>Admin - Usuários BizuInfo</title>
@@ -11,14 +13,16 @@
 
 <h:body>
 
-    <h:form>
+    <h:form id="formUsuarios">
 
         <p:panel header="Gestão de Usuários">
 
             <p:dataTable value="#{usuarioAdminBean.usuarios}"
                          var="u"
                          paginator="true"
-                         rows="10">
+                         rows="10"
+                         reflow="true">
+
 
                 <p:column headerText="ID">
                     #{u.id}
@@ -32,14 +36,30 @@
                     #{u.email}
                 </p:column>
 
-                <p:column headerText="Roles">
-                    <ui:repeat value="#{u.roles.toArray()}" var="r">
-                        #{r} <br/>
-                    </ui:repeat>
+                <p:column headerText="Perfil">
+
+                    <p:selectOneMenu value="#{u.role}" style="width:150px">
+
+                        <f:selectItem itemLabel="FUNCIONARIO" itemValue="FUNCIONARIO"/>
+                        <f:selectItem itemLabel="GERENTE" itemValue="GERENTE"/>
+                        <f:selectItem itemLabel="ADMIN" itemValue="ADMIN"/>
+
+                    </p:selectOneMenu>
+
                 </p:column>
 
                 <p:column headerText="Email Verificado">
-                    #{u.emailVerificado}
+                    <h:outputText value="#{u.emailVerificado ? 'Sim' : 'Não'}"/>
+                </p:column>
+
+                <p:column headerText="Ações">
+
+                    <p:commandButton value="Salvar"
+                                     icon="pi pi-save"
+                                     action="#{usuarioAdminBean.salvar(u)}"
+                                     update="formUsuarios"
+                                     process="@this"/>
+
                 </p:column>
 
             </p:dataTable>

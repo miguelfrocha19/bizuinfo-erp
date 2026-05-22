@@ -13,7 +13,7 @@ services:
             MYSQL_PASSWORD: bizuinfo_pass
 
         ports:
-            - "3307:3306"
+            - "3306:3306"
 
         volumes:
             - bizuinfo-data:/var/lib/mysql

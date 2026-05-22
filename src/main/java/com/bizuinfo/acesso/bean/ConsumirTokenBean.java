@@ -92,11 +92,11 @@ public class ConsumirTokenBean implements Serializable {
 
     private String dashboard(Usuario usuario) {
 
-        if (usuario.getRoles().contains(Role.ADMIN)) {
+        if (usuario.getRole() == Role.ADMIN) {
             return Paginas.DASHBOARD_ADMIN;
         }
 
-        if (usuario.getRoles().contains(Role.GERENTE)) {
+        if (usuario.getRole() == Role.GERENTE) {
             return Paginas.DASHBOARD_GERENTE;
         }
 

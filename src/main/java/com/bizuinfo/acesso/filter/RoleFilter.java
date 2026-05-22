@@ -46,19 +46,19 @@ public class RoleFilter implements Filter {
         boolean gerenteArea = uri.contains("/gerente/");
         boolean funcionarioArea = uri.contains("/funcionario/");
 
-        var roles = usuario.getRoles();
+        Role role = usuario.getRole();
 
-        if (adminArea && !roles.contains(Role.ADMIN)) {
+        if (adminArea && !role.temPermissao(Role.ADMIN)) {
             acessoNegado(req, res);
             return;
         }
 
-        if (gerenteArea && !roles.contains(Role.GERENTE) && !roles.contains(Role.ADMIN)) {
+        if (gerenteArea && !role.temPermissao(Role.GERENTE)) {
             acessoNegado(req, res);
             return;
         }
 
-        if (funcionarioArea && !roles.contains(Role.FUNCIONARIO) && !roles.contains(Role.GERENTE) && !roles.contains(Role.ADMIN)) {
+        if (funcionarioArea && !role.temPermissao(Role.FUNCIONARIO)) {
             acessoNegado(req, res);
             return;
         }
