@@ -11,11 +11,13 @@
 
 <h:body>
 
-    <h:form id="formLogin" prependId="false">
+    <h:form id="formLogin">
 
         <p:panel header="Entrar na Conta" styleClass="card">
 
-            <p:messages id="messages" showDetail="true" closable="true" />
+            <p:messages id="messages" closable="true">
+                <p:autoUpdate />
+            </p:messages>
 
             <h:panelGrid columns="1"
                          styleClass="full-width"
@@ -44,18 +46,8 @@
                 <p:commandButton
                         value="Entrar"
                         icon="pi pi-sign-in"
-                        action="#{loginBean.entrar}"
                         ajax="false"
-                        process="@form"
-                        styleClass="full-width p-mt-2"/>
-
-                <p:commandButton
-                        value="Entrar"
-                        icon="pi pi-sign-in"
                         action="#{loginBean.entrar}"
-                        ajax="false"
-                        process="@form"
-                        update="messages"
                         styleClass="full-width p-mt-2"/>
 
             </h:panelGrid>

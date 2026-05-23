@@ -82,7 +82,7 @@ public class RecuperarAcessoBean implements Serializable {
         String link = "http://localhost:8080/"
                     + "bizuinfo_erp_war_exploded/"
                     + "publico/recuperar-acesso.xhtml?token="
-                    + usuario.getTokenRecuperacao();
+                    + usuario.getTokenReset();
 
         String conteudo = "Clique no link para recuperar acesso:<br><br>"
                         + "<a href='" + link + "'>Recuperar acesso</a>";

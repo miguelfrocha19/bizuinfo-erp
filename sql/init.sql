@@ -62,6 +62,13 @@ CREATE TABLE IF NOT EXISTS itemcompra (
                                           CONSTRAINT fk_itemcompra_produto FOREIGN KEY (produto_idproduto) REFERENCES produto (idproduto)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS log_auditoria (
+                                             id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                             acao VARCHAR(100) NOT NULL,
+                                             detalhe TEXT,
+                                             data_hora DATETIME NOT NULL,
+                                             usuario_responsavel VARCHAR(100)
+) ENGINE=InnoDB;
 
 INSERT INTO usuario (nome, email, senha, role, email_verificado) VALUES
                                                                      ('Joao Paulo', 'bizuinfo.contato@gmail.com', 'admin', 'ADMIN', TRUE),

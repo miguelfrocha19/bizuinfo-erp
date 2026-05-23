@@ -12,7 +12,7 @@ public class LogAuditoria {
     private Long id;
 
     @Column(nullable = false)
-    private String acao; // Ex: "CADASTRO_USUARIO", "EDICAO_USUARIO"
+    private String acao; // Ex: "LOGIN", "LOGOUT"
 
     @Column(columnDefinition = "TEXT")
     private String detalhe;

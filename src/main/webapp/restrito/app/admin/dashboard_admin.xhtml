@@ -1,54 +1,223 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
 
 <h:head>
+
     <title>Dashboard Admin - BizuInfo</title>
 
     <h:outputStylesheet library="css" name="estilo.css"/>
+
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            background: #ffffff;
+            padding: 12px;
+
+            border-bottom: 1px solid #ddd;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .spacer {
+            flex: 1;
+        }
+
+        .status-ativo {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-inativo {
+            color: red;
+            font-weight: bold;
+        }
+
+        .content-area {
+            padding: 15px;
+        }
+
+    </style>
+
 </h:head>
 
 <h:body>
 
     <h:form id="formDashboard">
 
-        <p:panel header="ERP BizuInfo"
-                 styleClass="card-cadastro">
+        <div class="topbar">
 
-            <h:panelGrid columns="1"
-                         styleClass="full-width"
-                         cellpadding="7">
+            <p:commandButton value="Dashboard"
+                             icon="pi pi-home"
+                             action="#{usuarioAdminBean.irParaDashboard}"
+                             update=":formDashboard:conteudo"/>
 
-                <h:outputText
-                        value="Bem-vindo ao sistema!"
-                        style="font-size:18px; font-weight:bold; text-align:center;" />
+            <p:commandButton value="Usuários"
+                             icon="pi pi-users"
+                             action="#{usuarioAdminBean.irParaUsuarios}"
+                             update=":formDashboard:conteudo"/>
 
-                <p:divider />
+            <p:commandButton value="Logs"
+                             icon="pi pi-book"
+                             action="#{usuarioAdminBean.irParaLogs}"
+                             update=":formDashboard:conteudo"/>
 
-                <h:outputText
-                        value="Email: #{loginBean.email}" />
+            <div class="spacer"></div>
 
-                <p:commandButton value="Usuários"
-                                 icon="pi pi-users"
-                                 ajax="false"
-                                 action="/restrito/app/admin/usuarios_admin.xhtml?faces-redirect=true"
-                                 styleClass="full-width p-mt-2" />
+            <p:commandButton value="Sair"
+                             icon="pi pi-sign-out"
+                             ajax="false"
+                             action="#{loginBean.sair}"/>
 
-                <!-- REMOVER depois -->
-                <h:outputText
-                        value="Senha: #{loginBean.senha}" />
+        </div>
 
-                <p:commandButton
-                        value="Sair"
-                        icon="pi pi-sign-out"
-                        ajax="false"
-                        action="#{loginBean.sair}"
-                        styleClass="full-width p-mt-2" />
+        <p:growl id="growl" showDetail="true" life="3000"/>
 
-            </h:panelGrid>
+        <p:outputPanel id="conteudo" styleClass="content-area">
 
-        </p:panel>
+            <h:panelGroup rendered="#{usuarioAdminBean.abaAtiva == 0}">
+
+                <p:panel header="Resumo Geral">
+
+                    <h:panelGrid columns="1" cellpadding="8">
+
+                        <h:outputText value="Bem-vindo, #{loginBean.usuarioLogado.nome}"
+                                      style="font-size:18px;font-weight:bold"/>
+
+                        <h:outputText value="Email: #{loginBean.usuarioLogado.email}"/>
+
+                        <h:outputText value="Perfil: #{loginBean.usuarioLogado.role}"/>
+
+                    </h:panelGrid>
+
+                </p:panel>
+
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{usuarioAdminBean.abaAtiva == 1}">
+
+                <p:panel header="Gestão de Usuários">
+
+                    <p:dataTable id="tabelaUsuarios"
+                                 value="#{usuarioAdminBean.usuarios}"
+                                 var="u"
+                                 paginator="true"
+                                 rows="8"
+                                 emptyMessage="Nenhum usuário encontrado">
+
+                        <p:column headerText="ID">#{u.id}</p:column>
+
+                        <p:column headerText="Nome">
+                            <p:inputText value="#{u.nome}" style="width:100%"/>
+                        </p:column>
+
+                        <p:column headerText="Email">
+                            <p:inputText value="#{u.email}" style="width:100%"/>
+                        </p:column>
+
+                        <p:column headerText="Perfil">
+                            <p:selectOneMenu value="#{u.role}" style="width:160px">
+
+                                <f:selectItem itemLabel="FUNCIONARIO"
+                                              itemValue="#{com.bizuinfo.usuario.model.Role.FUNCIONARIO}"/>
+
+                                <f:selectItem itemLabel="GERENTE"
+                                              itemValue="#{com.bizuinfo.usuario.model.Role.GERENTE}"/>
+
+                                <f:selectItem itemLabel="ADMIN"
+                                              itemValue="#{com.bizuinfo.usuario.model.Role.ADMIN}"/>
+
+                            </p:selectOneMenu>
+                        </p:column>
+
+                        <p:column headerText="Status">
+                            <h:outputText value="#{u.emailVerificado ? 'ATIVO' : 'INATIVO'}"
+                                          styleClass="#{u.emailVerificado ? 'status-ativo' : 'status-inativo'}"/>
+                        </p:column>
+
+                        <p:column headerText="Ações">
+
+                            <p:commandButton icon="pi pi-save"
+                                             value="Salvar"
+                                             action="#{usuarioAdminBean.salvar(u)}"
+                                             update=":formDashboard:tabelaUsuarios :formDashboard:growl"/>
+
+                            <p:commandButton icon="pi pi-trash"
+                                             value="Excluir"
+                                             action="#{usuarioAdminBean.prepararExclusao(u)}"
+                                             oncomplete="PF('dlgExcluir').show()"/>
+
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:panel>
+
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{usuarioAdminBean.abaAtiva == 2}">
+
+                <p:panel header="Logs de Auditoria">
+
+                    <p:dataTable value="#{logAuditoriaBean.logs}"
+                                 var="l"
+                                 paginator="true"
+                                 rows="10"
+                                 emptyMessage="Nenhum log encontrado">
+
+                        <p:column headerText="Data/Hora">
+                            #{l.dataHora}
+                        </p:column>
+
+                        <p:column headerText="Ação">
+                            #{l.acao}
+                        </p:column>
+
+                        <p:column headerText="Detalhe">
+                            #{l.detalhe}
+                        </p:column>
+
+                        <p:column headerText="Usuário">
+                            #{l.usuarioResponsavel}
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:panel>
+
+            </h:panelGroup>
+
+        </p:outputPanel>
+
+        <p:confirmDialog widgetVar="dlgExcluir"
+                         header="Confirmação"
+                         message="Deseja realmente excluir este usuário?"
+                         severity="warn">
+
+            <p:commandButton value="Sim"
+                             action="#{usuarioAdminBean.excluirSelecionado}"
+                             update=":formDashboard:conteudo :formDashboard:growl"
+                             oncomplete="PF('dlgExcluir').hide()"/>
+
+            <p:commandButton value="Não"
+                             type="button"
+                             onclick="PF('dlgExcluir').hide()"/>
+
+        </p:confirmDialog>
 
     </h:form>
 

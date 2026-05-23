@@ -21,16 +21,14 @@ public class LinkMagicoService {
 
             case VERIFICACAO_EMAIL:
                 usuario.setTokenVerificacao(token);
-                usuario.setTokenVerificacaoExpiracao(expiracao);
+                usuario.setTokenExpiracao(expiracao);
                 break;
 
             case RECUPERACAO_ACESSO:
-                usuario.setTokenRecuperacao(token);
-                usuario.setTokenRecuperacaoExpiracao(expiracao);
+                usuario.setTokenReset(token);
                 break;
         }
 
-        usuario.setUltimoEnvioToken(LocalDateTime.now());
     }
 
     public boolean tokenValido(Usuario u, String token, TipoToken t) {
@@ -43,11 +41,10 @@ public class LinkMagicoService {
 
             case VERIFICACAO_EMAIL ->
                 token.equals(u.getTokenVerificacao())
-                    && tokenNaoExpirado(u.getTokenVerificacaoExpiracao());
+                    && tokenNaoExpirado(u.getTokenExpiracao());
 
             case RECUPERACAO_ACESSO ->
-                token.equals(u.getTokenRecuperacao())
-                    && tokenNaoExpirado(u.getTokenRecuperacaoExpiracao());
+                token.equals(u.getTokenReset());
         };
     }
 
@@ -56,12 +53,11 @@ public class LinkMagicoService {
 
             case VERIFICACAO_EMAIL:
                 usuario.setTokenVerificacao(null);
-                usuario.setTokenVerificacaoExpiracao(null);
+                usuario.setTokenExpiracao(null);
                 break;
 
             case RECUPERACAO_ACESSO:
-                usuario.setTokenRecuperacao(null);
-                usuario.setTokenRecuperacaoExpiracao(null);
+                usuario.setTokenReset(null);
                 break;
         }
     }

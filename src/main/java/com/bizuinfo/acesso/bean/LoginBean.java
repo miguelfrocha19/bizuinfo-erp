@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.bizuinfo.usuario.dao.UsuarioDAO;
 import com.bizuinfo.usuario.model.Role;
 import com.bizuinfo.usuario.model.Usuario;
+import com.bizuinfo.usuario.service.LogAuditoriaService;
 import com.bizuinfo.web.Paginas;
 
 import jakarta.enterprise.context.SessionScoped;
@@ -32,6 +33,9 @@ public class LoginBean implements Serializable {
     @Inject
     private UsuarioDAO usuarioDAO;
 
+    @Inject
+    private LogAuditoriaService logAuditoriaService;
+
     public String entrar() {
 
         Optional<Usuario> usuarioOptional = usuarioDAO.buscarPorEmail(email);
@@ -54,18 +58,31 @@ public class LoginBean implements Serializable {
         if (!senhaCorreta) {
             FacesContext.getCurrentInstance()
                     .addMessage(null, new FacesMessage("Senha inválida"));
+
+            logAuditoriaService.registrar(
+                    "LOGIN_FALHA",
+                    "Tentativa de login com senha inválida: " + email,
+                    email
+            );
+
             return null;
         }
 
-        usuarioLogado = usuario;
+        this.usuarioLogado = usuario;
 
         FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getSessionMap()
                 .put("usuario", usuario);
 
+        logAuditoriaService.registrar(
+                "LOGIN",
+                "Usuário logou no sistema: " + usuario.getEmail(),
+                usuario.getNome()
+        );
+
         if (usuario.getRole() == Role.ADMIN) {
-            return "/restrito/app/admin/usuarios_admin.xhtml?faces-redirect=true";
+            return "/restrito/app/admin/dashboard_admin.xhtml?faces-redirect=true";
         }
 
         if (usuario.getRole() == Role.GERENTE) {
@@ -76,6 +93,12 @@ public class LoginBean implements Serializable {
     }
 
     public String sair() {
+
+        logAuditoriaService.registrar(
+                "LOGOUT",
+                "Usuário saiu do sistema: " + (usuarioLogado != null ? usuarioLogado.getEmail() : "desconhecido"),
+                (usuarioLogado != null ? usuarioLogado.getNome() : "anon")
+        );
 
         FacesContext.getCurrentInstance()
                 .getExternalContext()

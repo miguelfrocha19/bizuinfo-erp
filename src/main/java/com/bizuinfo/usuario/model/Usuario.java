@@ -25,7 +25,7 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role = Role.FUNCIONARIO;
+    private Role role;
 
     @Column(name = "email_verificado", nullable = false)
     private boolean emailVerificado = false;
