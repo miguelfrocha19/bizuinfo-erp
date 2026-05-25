@@ -3,6 +3,7 @@ package com.bizuinfo.acesso.bean;
 import com.bizuinfo.acesso.service.LoginService;
 import com.bizuinfo.usuario.model.Usuario;
 import com.bizuinfo.web.Paginas;
+import com.bizuinfo.acesso.dto.LoginResultado;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -30,44 +31,59 @@ public class LoginBean implements Serializable {
 
     public String entrar() {
 
-        Usuario usuario = loginService.autenticar(email, senha);
+        LoginResultado resultado = loginService.autenticar(email, senha);
 
-        if (usuario == null) {
+        switch (resultado.getResultado()) {
 
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(
-                            FacesMessage.SEVERITY_ERROR,
-                            "Email ou senha inválidos",
-                            null
-                    )
-            );
+            case EMAIL_NAO_ENCONTRADO,
+                 SENHA_INVALIDA -> {
 
-            return null;
+                FacesContext.getCurrentInstance().addMessage(
+                        null,
+                        new FacesMessage(
+                                FacesMessage.SEVERITY_ERROR,
+                                "Email ou senha inválidos",
+                                null
+                        )
+                );
+
+                return null;
+            }
+
+            case EMAIL_NAO_CONFIRMADO -> {
+                return Paginas.CONFIRMAR_EMAIL
+                        + "?faces-redirect=true";
+            }
+
+            case SUCESSO -> {
+
+                Usuario usuario = resultado.getUsuario();
+
+                usuarioLogado = usuario;
+
+                FacesContext.getCurrentInstance()
+                        .getExternalContext()
+                        .getSessionMap()
+                        .put("usuario", usuario);
+
+                return switch (usuario.getRole()) {
+
+                    case ADMIN ->
+                            Paginas.DASHBOARD_ADMIN
+                                    + "?faces-redirect=true";
+
+                    case GERENTE ->
+                            Paginas.DASHBOARD_GERENTE
+                                    + "?faces-redirect=true";
+
+                    default ->
+                            Paginas.DASHBOARD
+                                    + "?faces-redirect=true";
+                };
+            }
         }
 
-        if (!usuario.getEmailVerificado()) {
-            return Paginas.CONFIRMAR_EMAIL + "?faces-redirect=true";
-        }
-
-        usuarioLogado = usuario;
-
-        FacesContext.getCurrentInstance()
-                .getExternalContext()
-                .getSessionMap()
-                .put("usuario", usuario);
-
-        return switch (usuario.getRole()) {
-
-            case ADMIN ->
-                    Paginas.DASHBOARD_ADMIN + "?faces-redirect=true";
-
-            case GERENTE ->
-                    Paginas.DASHBOARD_GERENTE + "?faces-redirect=true";
-
-            default ->
-                    Paginas.DASHBOARD + "?faces-redirect=true";
-        };
+        return null;
     }
 
     public String sair() {
