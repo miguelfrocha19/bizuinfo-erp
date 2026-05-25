@@ -1,10 +1,6 @@
 package com.bizuinfo.acesso.bean;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Optional;
-
-import com.bizuinfo.usuario.dao.UsuarioDAO;
+import com.bizuinfo.acesso.service.LoginService;
 import com.bizuinfo.usuario.model.Usuario;
 import com.bizuinfo.web.Paginas;
 
@@ -13,7 +9,8 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.mindrot.jbcrypt.BCrypt;
+import java.io.Serial;
+import java.io.Serializable;
 
 @Named
 @SessionScoped
@@ -28,33 +25,34 @@ public class LoginBean implements Serializable {
     private Usuario usuarioLogado;
 
     @Inject
-    private UsuarioDAO usuarioDAO;
+    private LoginService loginService;
 
     public String entrar() {
 
-        Optional<Usuario> usuarioOptional = usuarioDAO.buscarPorEmail(email);
+        Usuario usuario = loginService.autenticar(email, senha);
 
-        if (usuarioOptional.isEmpty()) {
+        if (usuario == null) {
             return null;
         }
 
-        Usuario usuario = usuarioOptional.get();
-        boolean senhaCorreta = BCrypt.checkpw(senha, usuario.getSenha());
-
-        if (!senhaCorreta) {
-            return null;
-        }
-
-        if (!usuario.getEmailVerificado()) {
-            return Paginas.CONFIRMAR_EMAIL + "?faces-redirect=true";
-        }
+        usuarioLogado = usuario;
 
         FacesContext.getCurrentInstance()
                     .getExternalContext()
                     .getSessionMap()
                     .put("usuario", usuario);
 
-        return Paginas.DASHBOARD + "?faces-redirect=true";
+        return switch (usuario.getRole()) {
+
+            case ADMIN ->
+                    Paginas.DASHBOARD_ADMIN + "?faces-redirect=true";
+
+            case GERENTE ->
+                    Paginas.DASHBOARD_GERENTE + "?faces-redirect=true";
+
+            default ->
+                    Paginas.DASHBOARD + "?faces-redirect=true";
+        };
     }
 
     public String sair() {
@@ -70,11 +68,23 @@ public class LoginBean implements Serializable {
         return usuarioLogado != null;
     }
 
-    public void setEmail(String email) { this.email = email; }
-    public void setSenha(String senha) { this.senha = senha; }
-    public void setUsuarioLogado (Usuario u) { usuarioLogado = u; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getSenha() { return senha; }
-    public String getEmail() { return email; }
-    public Usuario getUsuarioLogado() { return usuarioLogado; }
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Usuario getUsuarioLogado() {
+        return usuarioLogado;
+    }
 }

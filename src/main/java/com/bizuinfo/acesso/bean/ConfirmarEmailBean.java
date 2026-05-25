@@ -30,19 +30,10 @@ public class ConfirmarEmailBean implements Serializable {
     private static final long INTERVALO = 5000;
 
     @Inject
-    private UsuarioDAO usuarioDAO;
-
-    @Inject
-    private LinkMagicoService linkMagicoService;
-
-    @Inject
-    private EmailService emailService;
-
-    @Inject
     ConfirmarEmailService confirmarEmailService;
 
     public void confirmarEmail() {
-        enviarLinkConfirmacao();
+        confirmarEmailService.enviarLink(email);
     }
 
     public void reenviarLink() {
@@ -53,7 +44,6 @@ public class ConfirmarEmailBean implements Serializable {
 
         ultimoReenvio = System.currentTimeMillis();
 
-        enviarLinkConfirmacao();
         confirmarEmailService.enviarLink(email);
 
         FacesContext.getCurrentInstance().addMessage(
@@ -63,39 +53,6 @@ public class ConfirmarEmailBean implements Serializable {
                 "Email reenviado",
                 "Verifique sua caixa de entrada."
             )
-        );
-    }
-
-    // Trocar para service
-    private void enviarLinkConfirmacao() {
-
-        Optional<Usuario> optUsuario = usuarioDAO.buscarPorEmail(email);
-
-        if (optUsuario.isEmpty()) {
-            return;
-        }
-
-        Usuario usuario = optUsuario.get();
-
-        linkMagicoService.gerarToken(
-                usuario,
-                TipoToken.VERIFICACAO_EMAIL
-        );
-
-        usuarioDAO.salvar(usuario);
-
-        String link = "http://localhost:8080/"
-                    + "bizuinfo_erp_war_exploded/"
-                    + "restrito/acesso/dashboard.xhtml?token="
-                    + usuario.getTokenVerificacao();
-
-        String conteudo = "Clique no link para confirmar seu email da conta BizuInfo:<br><br>"
-                        + "<a href='" + link + "'>Confirmar Email</a>";
-
-        emailService.enviarEmail(
-                email,
-                "Confirmação de Email",
-                conteudo
         );
     }
 
