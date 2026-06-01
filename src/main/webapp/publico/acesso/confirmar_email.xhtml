@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Confirmar Email - BizuInfo</title>
+
+    <h:outputStylesheet library="css" name="estilo.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form id="form">
+
+        <p:panel header="Confirmação de Email"
+                 styleClass="card">
+
+            <p:messages id="messages" closable="true">
+                <p:autoUpdate />
+            </p:messages>
+
+            <h:panelGrid columns="1"
+                         styleClass="full-width"
+                         cellpadding="7">
+
+                <h:outputText
+                        value="Enviamos um link mágico para:"
+                        styleClass="texto-info"/>
+
+                <h:outputText
+                        value="#{confirmarEmailBean.email}"
+                        styleClass="texto-email"/>
+
+                <h:outputText
+                        value="Caso não encontre, verifique spam ou lixeira."
+                        styleClass="texto-info"/>
+
+                <p:poll interval="1"
+                        process="@this"
+                        update=":form:painelBotao" />
+
+                <h:panelGroup id="painelBotao"
+                              layout="block"
+                              styleClass="full-width">
+
+                    <p:commandButton
+                            id="btnReenviar"
+                            value="Reenviar Link"
+                            icon="pi pi-envelope"
+                            action="#{confirmarEmailBean.reenviarLink}"
+                            update=":form:messages :form:painelBotao"
+                            disabled="#{confirmarEmailBean.contadorAtivo}"
+                            styleClass="full-width p-mt-2"/>
+
+                    <h:panelGroup
+                            rendered="#{confirmarEmailBean.contadorAtivo}"
+                            layout="block"
+                            style="margin-top:10px; text-align:center;">
+
+                        <h:outputText
+                                value="Aguarde #{confirmarEmailBean.segundosRestantes}s"
+                                styleClass="texto-info"/>
+
+                    </h:panelGroup>
+
+                </h:panelGroup>
+
+            </h:panelGrid>
+
+            <p:divider/>
+
+            <h:link
+                    value="Retornar para Login"
+                    outcome="/publico/acesso/login.xhtml"
+                    styleClass="link"/>
+
+        </p:panel>
+
+    </h:form>
+
+</h:body>
+</html>

@@ -1,0 +1,50 @@
+body {
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    width: 450px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.link {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    color: #2196F3;
+    text-decoration: underline;
+}
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    width: 100%;
+    padding: 12px;
+
+    background: white;
+    color: #444;
+
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+.google-btn:hover {
+    background: #f7f8f8;
+}

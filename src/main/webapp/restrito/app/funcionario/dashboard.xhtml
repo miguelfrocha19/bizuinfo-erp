@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Dashboard - BizuInfo</title>
+
+    <h:outputStylesheet library="css" name="estilo.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form id="formDashboard">
+
+        <p:panel header="ERP BizuInfo"
+                 styleClass="card-cadastro">
+
+            <h:panelGrid columns="1"
+                         styleClass="full-width"
+                         cellpadding="7">
+
+                <h:outputText
+                        value="Bem-vindo ao sistema!"
+                        style="font-size:18px; font-weight:bold; text-align:center;" />
+
+                <p:divider />
+
+                <h:outputText
+                        value="Email: #{loginBean.email}" />
+
+                <!-- REMOVER depois -->
+                <h:outputText
+                        value="Senha: #{loginBean.senha}" />
+
+                <p:commandButton
+                        value="Sair"
+                        icon="pi pi-sign-out"
+                        ajax="false"
+                        action="#{loginBean.sair}"
+                        styleClass="full-width p-mt-2" />
+
+            </h:panelGrid>
+
+        </p:panel>
+
+    </h:form>
+
+</h:body>
+</html>

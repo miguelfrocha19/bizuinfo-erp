@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+
+    <title>Meu Perfil</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            background: white;
+            border-bottom: 1px solid #ddd;
+
+            padding: 12px;
+
+            display: flex;
+            align-items: center;
+        }
+
+        .spacer {
+            flex: 1;
+        }
+
+        .perfil-container {
+            max-width: 700px;
+            margin: 30px auto;
+        }
+
+    </style>
+
+</h:head>
+
+<h:body>
+
+    <h:form id="formPerfil">
+
+        <div class="topbar">
+
+            <p:commandButton value="Voltar"
+                             icon="pi pi-arrow-left"
+                             action="#{perfilBean.voltar}"
+                             ajax="false"/>
+
+            <div class="spacer"></div>
+
+            <p:commandButton value="Sair"
+                             icon="pi pi-sign-out"
+                             action="#{loginBean.sair}"
+                             ajax="false"/>
+
+        </div>
+
+        <div class="perfil-container">
+
+            <p:growl id="growl"
+                     showDetail="true"
+                     life="3000"/>
+
+            <p:panel header="Meu Perfil">
+
+                <div style="text-align:center;margin-bottom:25px">
+
+                    <i class="pi pi-user"
+                       style="font-size:90px;color:#666"></i>
+
+                    <h2>Seu Perfil</h2>
+
+                </div>
+
+                <h:panelGrid columns="2"
+                             cellpadding="10"
+                             width="100%">
+
+                    <h:outputText value="Nome:"/>
+
+                    <p:inputText value="#{perfilBean.usuario.nome}"
+                                 style="width:100%"/>
+
+                    <h:outputText value="Email:"/>
+
+                    <p:inputText value="#{perfilBean.usuario.email}"
+                                 style="width:100%"/>
+
+                    <h:outputText value="Perfil:"/>
+
+                    <h:outputText value="#{perfilBean.usuario.role}"
+                                  style="font-weight:bold"/>
+
+                    <h:outputText value="Nova senha:"/>
+
+                    <p:password value="#{perfilBean.novaSenha}"
+                                toggleMask="true"
+                                feedback="true"
+                                redisplay="true"
+                                promptLabel="Crie uma senha forte"
+                                weakLabel="Fraca"
+                                goodLabel="Média"
+                                strongLabel="Forte"
+                                placeholder="Digite sua nova senha"
+                                style="width:100%"/>
+
+                    <h:outputText value="Confirmar senha:"/>
+
+                    <p:password value="#{perfilBean.confirmarSenha}"
+                                toggleMask="true"
+                                redisplay="true"
+                                style="width:100%"/>
+
+                </h:panelGrid>
+
+                <br/>
+
+                <p:commandButton value="Salvar alterações"
+                                 icon="pi pi-save"
+                                 action="#{perfilBean.salvar}"
+                                 update="formPerfil"/>
+
+                <p:commandButton value="Excluir minha conta"
+                                 icon="pi pi-trash"
+                                 style="margin-left:10px;
+                                        background:#d9534f;
+                                        border:none"
+                                 action="#{perfilBean.excluirConta}"
+                                 ajax="false"
+                                 onclick="return confirm('Tem certeza que deseja excluir sua conta?');"/>
+
+            </p:panel>
+
+        </div>
+
+    </h:form>
+
+</h:body>
+</html>

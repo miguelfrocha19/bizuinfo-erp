@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html">
+
+<f:metadata>
+    <f:viewParam
+            name="token"
+            value="#{consumirTokenConfirmacaoBean.token}" />
+
+    <f:viewAction
+            action="#{consumirTokenConfirmacaoBean.consumir}" />
+</f:metadata>
+
+<h:head>
+    <title>Validando acesso...</title>
+    <h:outputStylesheet library="css" name="estilo.css"/>
+</h:head>
+
+<h:body>
+
+    <h2>Validando acesso...</h2>
+
+</h:body>
+</html>

@@ -1,0 +1,23 @@
+services:
+
+    bizuinfo-db:
+        image: mysql:8.0
+        container_name: bizuinfo-mysql
+
+        restart: always
+
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: bizuinfo_db
+            MYSQL_USER: bizuinfo_user
+            MYSQL_PASSWORD: bizuinfo_pass
+
+        ports:
+            - "3307:3306"
+
+        volumes:
+            - bizuinfo-data:/var/lib/mysql
+            - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+    bizuinfo-data:

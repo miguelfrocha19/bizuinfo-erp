@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Acesso Negado - BizuInfo</title>
+
+    <h:outputStylesheet library="css" name="estilo.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form id="formAcessoNegado">
+
+        <p:panel header="Acesso Negado"
+                 styleClass="card-cadastro">
+
+            <h:panelGrid columns="1"
+                         styleClass="full-width"
+                         cellpadding="7">
+
+                <h:outputText
+                        value="Você não possui permissão para acessar esta página."
+                        style="text-align:center;" />
+
+                <p:button
+                        value="Voltar para Dashboard"
+                        icon="pi pi-arrow-left"
+                        outcome="#{sessaoBean.dashboard()}"
+                        styleClass="full-width p-mt-2" />
+
+            </h:panelGrid>
+
+        </p:panel>
+
+    </h:form>
+
+</h:body>
+</html>

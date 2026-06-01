@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Recuperar Acesso - BizuInfo</title>
+
+    <h:outputStylesheet library="css" name="estilo.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form id="formRecuperar">
+
+        <p:panel header="Recuperar Acesso"
+                 styleClass="card">
+
+            <p:messages id="mensagens" closable="true">
+                <p:autoUpdate/>
+            </p:messages>
+
+            <h:panelGrid columns="1"
+                         styleClass="full-width"
+                         cellpadding="7">
+
+                <h:outputText
+                        value="Informe seu email para receber o link de recuperação."/>
+
+                <p:inputText
+                        value="#{recuperarAcessoBean.email}"
+                        placeholder="Digite seu email"
+                        required="true"
+                        styleClass="full-width"/>
+
+                <p:poll interval="1"
+                        process="@this"
+                        update=":formRecuperar:painelBotao" />
+
+                <h:panelGroup id="painelBotao"
+                              layout="block"
+                              styleClass="full-width">
+
+                    <p:commandButton
+                            id="btnEnviar"
+                            value="Enviar link"
+                            icon="pi pi-send"
+                            action="#{recuperarAcessoBean.enviarLink}"
+                            update=":formRecuperar:mensagens :formRecuperar:painelBotao"
+                            rendered="#{!recuperarAcessoBean.linkEnviado}"
+                            disabled="#{recuperarAcessoBean.contadorAtivo}"
+                            styleClass="full-width p-mt-2"/>
+
+                    <p:commandButton
+                            id="btnReenviar"
+                            value="Reenviar link"
+                            icon="pi pi-refresh"
+                            action="#{recuperarAcessoBean.reenviarLink}"
+                            update=":formRecuperar:mensagens :formRecuperar:painelBotao"
+                            rendered="#{recuperarAcessoBean.linkEnviado}"
+                            disabled="#{recuperarAcessoBean.contadorAtivo}"
+                            styleClass="full-width p-mt-2"/>
+
+                    <h:panelGroup
+                            rendered="#{recuperarAcessoBean.contadorAtivo}"
+                            layout="block"
+                            style="margin-top:10px; text-align:center;">
+
+                        <h:outputText
+                                value="Aguarde #{recuperarAcessoBean.segundosRestantes}s"
+                                styleClass="texto-info"/>
+
+                    </h:panelGroup>
+
+                </h:panelGroup>
+
+            </h:panelGrid>
+
+            <p:divider/>
+
+            <h:link
+                    value="Retornar para Login"
+                    outcome="/publico/acesso/login.xhtml"
+                    styleClass="link"/>
+
+        </p:panel>
+
+    </h:form>
+
+</h:body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Cadastro - BizuInfo</title>
+
+    <h:outputStylesheet library="css" name="estilo.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form id="formCadastro">
+
+        <p:panel header="Criar Nova Conta"
+                 styleClass="card">
+
+            <p:messages id="messages" closable="true">
+                <p:autoUpdate />
+            </p:messages>
+
+            <h:panelGrid columns="1"
+                         styleClass="full-width"
+                         cellpadding="7">
+
+                <p:outputLabel for="nome"
+                               value="Nome Completo"/>
+
+                <p:inputText
+                        id="nome"
+                        value="#{cadastroBean.nome}"
+                        required="true"
+                        placeholder="Ex: João Silva"
+                        styleClass="full-width"/>
+
+                <p:outputLabel for="email"
+                               value="E-mail"/>
+
+                <p:inputText
+                        id="email"
+                        value="#{cadastroBean.email}"
+                        required="true"
+                        placeholder="seu@email.com"
+                        styleClass="full-width"/>
+
+                <p:outputLabel for="senha"
+                               value="Senha"/>
+
+                <p:password
+                        id="senha"
+                        value="#{cadastroBean.senha}"
+                        required="true"
+                        toggleMask="true"
+                        feedback="true"
+                        redisplay="true"
+                        promptLabel="Crie uma senha forte"
+                        weakLabel="Fraca"
+                        goodLabel="Média"
+                        strongLabel="Forte"
+                        placeholder="Digite sua senha"
+                        styleClass="full-width"/>
+
+                <p:commandButton
+                        value="Cadastrar"
+                        icon="pi pi-user-plus"
+                        ajax="false"
+                        action="#{cadastroBean.cadastrar}"
+                        styleClass="full-width p-mt-2"/>
+
+            </h:panelGrid>
+
+            <p:divider/>
+
+            <h:link
+                    value="Já tenho conta"
+                    outcome="/publico/acesso/login.xhtml"
+                    styleClass="link"/>
+
+        </p:panel>
+
+    </h:form>
+
+</h:body>
+</html>

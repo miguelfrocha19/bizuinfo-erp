@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Login - BizuInfo</title>
+
+    <h:outputStylesheet library="css" name="estilo.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form id="formLogin">
+
+        <p:panel header="Entrar na Conta" styleClass="card">
+
+            <p:messages id="messages" closable="true">
+                <p:autoUpdate />
+            </p:messages>
+
+            <h:panelGrid columns="1"
+                         styleClass="full-width"
+                         cellpadding="7">
+
+                <p:outputLabel for="username" value="E-mail"/>
+
+                <p:inputText
+                        id="username"
+                        value="#{loginBean.email}"
+                        placeholder="seu@email.com"
+                        required="true"
+                        styleClass="full-width"/>
+
+                <p:outputLabel for="password" value="Senha"/>
+
+                <p:password
+                        id="password"
+                        value="#{loginBean.senha}"
+                        placeholder="Digite sua senha"
+                        required="true"
+                        toggleMask="true"
+                        feedback="false"
+                        styleClass="full-width"/>
+
+                <p:commandButton
+                        value="Entrar"
+                        icon="pi pi-sign-in"
+                        ajax="false"
+                        action="#{loginBean.entrar}"
+                        styleClass="full-width p-mt-2"/>
+
+                <!-- Colocar aqui botão de login com google-->
+                <h:outputLink
+                        value="#{request.contextPath}/oauth2/authorization/google"
+                        styleClass="google-btn">
+
+                    <i class="pi pi-google"></i>
+                    Entrar com Google
+
+                </h:outputLink>
+
+            </h:panelGrid>
+
+            <p:divider/>
+
+            <p:panelGrid columns="2"
+                         styleClass="full-width"
+                         layout="grid">
+
+                <h:link
+                        value="Esqueci Minha Senha"
+                        outcome="/publico/acesso/recuperar_acesso.xhtml"
+                        styleClass="link"/>
+
+                <h:link
+                        value="Criar Conta"
+                        outcome="/publico/acesso/cadastro.xhtml"
+                        styleClass="link"/>
+
+            </p:panelGrid>
+
+        </p:panel>
+
+    </h:form>
+
+</h:body>
+</html>
