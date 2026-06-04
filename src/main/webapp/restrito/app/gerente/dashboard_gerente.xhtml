@@ -64,202 +64,213 @@
 
 <h:body>
 
-        <h:form id="formDashboard">
+    <h:form id="formDashboard">
 
-            <div class="topbar">
+        <div class="topbar">
 
-                <p:commandButton value="Dashboard"
-                                 icon="pi pi-home"
-                                 action="#{usuarioGerenteBean.irParaDashboard}"
-                                 update=":formDashboard:conteudo"/>
+            <p:commandButton value="Dashboard"
+                             icon="pi pi-home"
+                             action="#{usuarioGerenteBean.irParaDashboard}"
+                             update=":formDashboard:conteudo"/>
 
-                <p:commandButton value="Usuários"
-                                 icon="pi pi-users"
-                                 action="#{usuarioGerenteBean.irParaUsuarios}"
-                                 update=":formDashboard:conteudo"/>
+            <p:commandButton value="Usuários"
+                             icon="pi pi-users"
+                             action="#{usuarioGerenteBean.irParaUsuarios}"
+                             update=":formDashboard:conteudo"/>
 
-                <div class="spacer"></div>
+            <p:menuButton value="Produtos"
+                          icon="pi pi-box">
 
-                <p:menuButton icon="pi pi-user" style="margin-left:auto">
-                    <p:menuitem value="Meu Perfil"
-                                outcome="/restrito/app/perfil/perfil_usuario.xhtml?faces-redirect=true"/>
-                    <p:menuitem value="Sair"
-                                icon="pi pi-sign-out"
-                                action="#{loginBean.sair}"/>
-                </p:menuButton>
-            </div>
+                <p:menuitem value="Gerenciar Produtos"
+                            outcome="/restrito/app/produto/gerenciar_produtos.xhtml"/>
 
-            <p:growl id="growl"
-                     showDetail="true"
-                     life="3000"/>
+                <p:menuitem value="Gerenciar Categorias"
+                            outcome="/restrito/app/produto/gerenciar_categorias.xhtml"/>
 
-            <p:outputPanel id="conteudo"
-                           styleClass="content-area">
+            </p:menuButton>
 
-                <h:panelGroup rendered="#{usuarioGerenteBean.abaAtiva == 0}">
+            <div class="spacer"></div>
 
-                    <p:panel header="Resumo Geral">
+            <p:menuButton icon="pi pi-user" style="margin-left:auto">
+                <p:menuitem value="Meu Perfil"
+                            outcome="/restrito/app/perfil/perfil_usuario.xhtml?faces-redirect=true"/>
+                <p:menuitem value="Sair"
+                            icon="pi pi-sign-out"
+                            action="#{loginBean.sair}"/>
+            </p:menuButton>
+        </div>
 
-                        <h:panelGrid columns="1"
-                                     cellpadding="8">
+        <p:growl id="growl"
+                 showDetail="true"
+                 life="3000"/>
 
-                            <h:outputText value="Bem-vindo, #{loginBean.usuarioLogado.nome}"
-                                          style="font-size:18px;font-weight:bold"/>
+        <p:outputPanel id="conteudo"
+                       styleClass="content-area">
 
-                            <h:outputText value="Email: #{loginBean.usuarioLogado.email}"/>
+            <h:panelGroup rendered="#{usuarioGerenteBean.abaAtiva == 0}">
 
-                            <h:outputText value="Perfil: #{loginBean.usuarioLogado.role}"/>
+                <p:panel header="Resumo Geral">
 
-                        </h:panelGrid>
+                    <h:panelGrid columns="1"
+                                 cellpadding="8">
 
-                    </p:panel>
+                        <h:outputText value="Bem-vindo, #{loginBean.usuarioLogado.nome}"
+                                      style="font-size:18px;font-weight:bold"/>
 
-                </h:panelGroup>
+                        <h:outputText value="Email: #{loginBean.usuarioLogado.email}"/>
 
-                <h:panelGroup rendered="#{usuarioGerenteBean.abaAtiva == 1}">
+                        <h:outputText value="Perfil: #{loginBean.usuarioLogado.role}"/>
 
-                    <p:panel header="Gestão de Usuários">
+                    </h:panelGrid>
 
-                        <div class="table-container">
+                </p:panel>
 
-                            <p:dataTable id="tabelaUsuarios"
-                                         value="#{usuarioGerenteBean.usuarios}"
-                                         var="u"
-                                         editable="true"
-                                         editMode="row"
-                                         emptyMessage="Nenhum usuário encontrado"
-                                         sortMode="single">
+            </h:panelGroup>
 
-                                <p:ajax event="rowEdit"
-                                        listener="#{usuarioGerenteBean.salvar}"
-                                        update=":formDashboard:growl"/>
+            <h:panelGroup rendered="#{usuarioGerenteBean.abaAtiva == 1}">
 
-                                <p:column headerText="Nome"
-                                          sortBy="#{u.nome}">
+                <p:panel header="Gestão de Usuários">
 
-                                    <p:cellEditor>
+                    <div class="table-container">
 
-                                        <f:facet name="output">
+                        <p:dataTable id="tabelaUsuarios"
+                                     value="#{usuarioGerenteBean.usuarios}"
+                                     var="u"
+                                     editable="true"
+                                     editMode="row"
+                                     emptyMessage="Nenhum usuário encontrado"
+                                     sortMode="single">
 
-                                            <h:outputText value="#{u.nome}"/>
+                            <p:ajax event="rowEdit"
+                                    listener="#{usuarioGerenteBean.salvar}"
+                                    update=":formDashboard:growl"/>
 
-                                        </f:facet>
+                            <p:column headerText="Nome"
+                                      sortBy="#{u.nome}">
 
-                                        <f:facet name="input">
+                                <p:cellEditor>
 
-                                            <p:inputText value="#{u.nome}"
-                                                         style="width:100%"/>
+                                    <f:facet name="output">
 
-                                        </f:facet>
+                                        <h:outputText value="#{u.nome}"/>
 
-                                    </p:cellEditor>
+                                    </f:facet>
 
-                                </p:column>
+                                    <f:facet name="input">
 
-                                <p:column headerText="Email"
-                                          sortBy="#{u.email}">
+                                        <p:inputText value="#{u.nome}"
+                                                     style="width:100%"/>
 
-                                    <p:cellEditor>
+                                    </f:facet>
 
-                                        <f:facet name="output">
+                                </p:cellEditor>
 
-                                            <h:outputText value="#{u.email}"/>
+                            </p:column>
 
-                                        </f:facet>
+                            <p:column headerText="Email"
+                                      sortBy="#{u.email}">
 
-                                        <f:facet name="input">
+                                <p:cellEditor>
 
-                                            <p:inputText value="#{u.email}"
-                                                         style="width:100%"/>
+                                    <f:facet name="output">
 
-                                        </f:facet>
+                                        <h:outputText value="#{u.email}"/>
 
-                                    </p:cellEditor>
+                                    </f:facet>
 
-                                </p:column>
+                                    <f:facet name="input">
 
-                                <p:column headerText="Perfil"
-                                          sortBy="#{u.roleString}">
+                                        <p:inputText value="#{u.email}"
+                                                     style="width:100%"/>
 
-                                    <p:cellEditor>
+                                    </f:facet>
 
-                                        <f:facet name="output">
+                                </p:cellEditor>
 
-                                            <h:outputText value="#{u.roleString}"/>
+                            </p:column>
 
-                                        </f:facet>
+                            <p:column headerText="Perfil"
+                                      sortBy="#{u.roleString}">
 
-                                        <f:facet name="input">
+                                <p:cellEditor>
 
-                                            <p:selectOneMenu value="#{u.roleString}"
-                                                             disabled="#{loginBean.usuarioLogado.id == u.id}">
+                                    <f:facet name="output">
 
-                                                <f:selectItem itemLabel="FUNCIONARIO"
-                                                              itemValue="FUNCIONARIO"/>
+                                        <h:outputText value="#{u.roleString}"/>
 
-                                                <f:selectItem itemLabel="GERENTE"
-                                                              itemValue="GERENTE"/>
+                                    </f:facet>
 
-                                            </p:selectOneMenu>
+                                    <f:facet name="input">
 
-                                        </f:facet>
+                                        <p:selectOneMenu value="#{u.roleString}"
+                                                         disabled="#{loginBean.usuarioLogado.id == u.id}">
 
-                                    </p:cellEditor>
+                                            <f:selectItem itemLabel="FUNCIONARIO"
+                                                          itemValue="FUNCIONARIO"/>
 
-                                </p:column>
+                                            <f:selectItem itemLabel="GERENTE"
+                                                          itemValue="GERENTE"/>
 
-                                <p:column headerText="Status"
-                                          sortBy="#{u.emailVerificado}">
+                                        </p:selectOneMenu>
 
-                                    <h:outputText value="#{u.emailVerificado ? 'ATIVO' : 'INATIVO'}"
-                                                  styleClass="#{u.emailVerificado ? 'status-ativo' : 'status-inativo'}"/>
+                                    </f:facet>
 
-                                </p:column>
+                                </p:cellEditor>
 
-                                <p:column style="width:120px">
+                            </p:column>
 
-                                    <p:rowEditor/>
+                            <p:column headerText="Status"
+                                      sortBy="#{u.emailVerificado}">
 
-                                </p:column>
+                                <h:outputText value="#{u.emailVerificado ? 'ATIVO' : 'INATIVO'}"
+                                              styleClass="#{u.emailVerificado ? 'status-ativo' : 'status-inativo'}"/>
 
-                                <p:column headerText="Excluir">
+                            </p:column>
 
-                                    <p:commandButton icon="pi pi-trash"
-                                                     value="Excluir"
-                                                     process="@this"
-                                                     update=":formDashboard:growl"
-                                                     action="#{usuarioGerenteBean.prepararExclusao(u)}"
-                                                     oncomplete="PF('dlgExcluir').show()"/>
+                            <p:column style="width:120px">
 
-                                </p:column>
+                                <p:rowEditor/>
 
-                            </p:dataTable>
+                            </p:column>
 
-                        </div>
+                            <p:column headerText="Excluir">
 
-                    </p:panel>
+                                <p:commandButton icon="pi pi-trash"
+                                                 value="Excluir"
+                                                 process="@this"
+                                                 update=":formDashboard:growl"
+                                                 action="#{usuarioGerenteBean.prepararExclusao(u)}"
+                                                 oncomplete="PF('dlgExcluir').show()"/>
 
-                </h:panelGroup>
+                            </p:column>
 
-            </p:outputPanel>
+                        </p:dataTable>
 
-            <p:confirmDialog widgetVar="dlgExcluir"
-                             header="Confirmação"
-                             message="Deseja realmente excluir este usuário?"
-                             severity="warn">
+                    </div>
 
-                <p:commandButton value="Sim"
-                                 process="@this"
-                                 action="#{usuarioGerenteBean.excluirSelecionado}"
-                                 update=":formDashboard:conteudo :formDashboard:growl"
-                                 oncomplete="PF('dlgExcluir').hide()"/>
+                </p:panel>
 
-                <p:commandButton value="Não"
-                                 type="button"
-                                 onclick="PF('dlgExcluir').hide()"/>
+            </h:panelGroup>
 
-            </p:confirmDialog>
+        </p:outputPanel>
 
-        </h:form>
+        <p:confirmDialog widgetVar="dlgExcluir"
+                         header="Confirmação"
+                         message="Deseja realmente excluir este usuário?"
+                         severity="warn">
+
+            <p:commandButton value="Sim"
+                             process="@this"
+                             action="#{usuarioGerenteBean.excluirSelecionado}"
+                             update=":formDashboard:conteudo :formDashboard:growl"
+                             oncomplete="PF('dlgExcluir').hide()"/>
+
+            <p:commandButton value="Não"
+                             type="button"
+                             onclick="PF('dlgExcluir').hide()"/>
+
+        </p:confirmDialog>
+
+    </h:form>
 </h:body>
 </html>
