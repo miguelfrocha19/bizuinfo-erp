@@ -5,13 +5,13 @@ import com.bizuinfo.acesso.model.ResultadoLogin;
 import com.bizuinfo.usuario.dao.UsuarioDAO;
 import com.bizuinfo.usuario.model.Usuario;
 import com.bizuinfo.usuario.service.LogAuditoriaService;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
 
-@ApplicationScoped
+@Stateless
 public class LoginService {
 
     @Inject

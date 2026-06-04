@@ -3,11 +3,11 @@ package com.bizuinfo.usuario.service;
 import com.bizuinfo.usuario.dao.UsuarioDAO;
 import com.bizuinfo.usuario.model.Usuario;
 import com.bizuinfo.usuario.model.Role;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import org.mindrot.jbcrypt.BCrypt;
 
-@ApplicationScoped
+@Stateless
 public class UsuarioService {
 
     @Inject

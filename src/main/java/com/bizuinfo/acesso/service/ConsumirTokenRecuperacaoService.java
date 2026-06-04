@@ -3,12 +3,12 @@ package com.bizuinfo.acesso.service;
 import com.bizuinfo.acesso.model.TipoToken;
 import com.bizuinfo.usuario.dao.UsuarioDAO;
 import com.bizuinfo.usuario.model.Usuario;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
 
-@RequestScoped
+@Stateless
 public class ConsumirTokenRecuperacaoService {
 
     @Inject

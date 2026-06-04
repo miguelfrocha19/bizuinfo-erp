@@ -1,6 +1,6 @@
 package com.bizuinfo.infra.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -8,7 +8,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
-@ApplicationScoped
+@Stateless
 public class EmailService {
 
     private static final String USER = System.getenv("MAIL_USER");

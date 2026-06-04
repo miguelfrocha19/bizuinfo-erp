@@ -6,12 +6,12 @@ import com.bizuinfo.usuario.dao.UsuarioDAO;
 import com.bizuinfo.usuario.model.Usuario;
 
 import com.bizuinfo.web.Paginas;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
 
-@ApplicationScoped
+@Stateless
 public class RecuperarAcessoService {
 
     @Inject

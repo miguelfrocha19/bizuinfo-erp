@@ -5,14 +5,14 @@ import com.bizuinfo.infra.service.EmailService;
 import com.bizuinfo.usuario.dao.UsuarioDAO;
 import com.bizuinfo.usuario.model.Usuario;
 import com.bizuinfo.web.Paginas;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
 
-@ApplicationScoped
+@Stateless
 public class ConfirmarEmailService {
 
     @Inject

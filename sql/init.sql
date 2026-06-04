@@ -134,8 +134,6 @@ INSERT INTO produto (nome, preco, estoqueAtual, descricao, fornecedor_idforneced
                                                                                                                 ('Placa de Vídeo RTX 4070 Ti', 5400.00, 5, '12GB GDDR6X', 6, 2),
                                                                                                                 ('Mousepad Gamer Estendido', 120.00, 60, 'Superfície Speed 90x40cm', 2, 1),
                                                                                                                 ('Microfone Seiren Mini', 350.00, 15, 'Condensador USB', 2, 4),
-                                                                                                                ('Teclado Mecânico K70', 890.00, 15, 'Switch Cherry MX Red', 4, 1),
-                                                                                                                ('Fonte ATX 750W 80 Plus Gold', 650.00, 25, 'Modular', 4, 2),
                                                                                                                 ('Volante G29 Driving Force', 1800.00, 8, 'Com Pedais', 1, 1),
                                                                                                                 ('Caixa de Som Z906', 2200.00, 4, 'Surround 5.1 1000W', 1, 4);
 SET GLOBAL event_scheduler = ON;

@@ -3,10 +3,10 @@ package com.bizuinfo.usuario.service;
 import com.bizuinfo.infra.util.RequestUtil;
 import com.bizuinfo.usuario.dao.LogAuditoriaDAO;
 import com.bizuinfo.usuario.model.LogAuditoria;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
-@ApplicationScoped
+@Stateless
 public class LogAuditoriaService {
 
     @Inject
