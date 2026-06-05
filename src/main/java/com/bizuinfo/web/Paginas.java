@@ -36,6 +36,7 @@ public class Paginas {
     // Produto                           NOME                ACESSO             MÓDULO         PÁGINA
     public static final String GERENCIAR_PRODUTOS         = RESTRITO + APP + PRODUTO     + "gerenciar_produtos.xhtml";
     public static final String GERENCIAR_CATEGORIAS       = RESTRITO + APP + PRODUTO     + "gerenciar_categorias.xhtml";
+    public static final String GERENCIAR_ESTOQUE          = RESTRITO + APP + PRODUTO     + "gerenciar_estoque.xhtml";
     public static final String DETALHES_PRODUTO           = RESTRITO + APP + PRODUTO     + "detalhes_produto.xhtml";
 
 

@@ -8,6 +8,7 @@ public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idproduto")
     private Long id;
 
     @Column(name = "nome")
@@ -17,7 +18,10 @@ public class Produto {
     private double preco;
 
     @Column(name = "estoqueAtual")
-    private int estoque;
+    private int estoqueAtual;
+
+    @Column(name = "estoqueMinimo", columnDefinition = "int default 5")
+    private int estoqueMinimo;
 
     @Column(name = "descricao")
     private String descricao;
@@ -28,11 +32,34 @@ public class Produto {
     @Column(name = "categoria_categoria_id")
     private int categoria;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "categoria_nome")
+    private String categoriaNome;
 
-    public Long getId() {
-        return id;
-    }
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public double getPreco() { return preco; }
+    public void setPreco(double preco) { this.preco = preco; }
+
+    public int getEstoqueAtual() { return estoqueAtual; }
+    public void setEstoqueAtual(int estoqueAtual) { this.estoqueAtual = estoqueAtual; }
+
+    public int getEstoqueMinimo() { return estoqueMinimo; }
+    public void setEstoqueMinimo(int estoqueMinimo) { this.estoqueMinimo = estoqueMinimo; }
+
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public Long getIdFornecedor() { return idFornecedor; }
+    public void setIdFornecedor(Long idFornecedor) { this.idFornecedor = idFornecedor; }
+
+    public int getCategoria() { return categoria; }
+    public void setCategoria(int categoria) { this.categoria = categoria; }
+
+    public String getCategoriaNome() { return categoriaNome; }
+    public void setCategoriaNome(String categoriaNome) { this.descricao = categoriaNome; }
 }
