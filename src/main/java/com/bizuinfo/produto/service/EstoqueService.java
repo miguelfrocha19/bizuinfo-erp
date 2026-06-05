@@ -3,8 +3,10 @@ package com.bizuinfo.produto.service;
 import com.bizuinfo.infra.service.EmailService;
 import com.bizuinfo.produto.dao.ProdutoDAO;
 import com.bizuinfo.produto.model.Produto;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+
 import java.util.Optional;
 
 @Stateless
@@ -13,7 +15,7 @@ public class EstoqueService {
     @Inject
     private ProdutoDAO produtoDAO;
 
-    @Inject
+    @EJB
     private EmailService emailService;
 
     private static final String EMAIL_GERENCIA = "bizuinfo.contato@gmail.com";
