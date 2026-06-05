@@ -124,6 +124,15 @@ VALUES ('Periféricos'),
        ('Armazenamento'),
        ('Placas-Mãe');
 
+INSERT INTO fornecedor (nome)
+VALUES ('Logitech'),
+       ('Razer'),
+       ('NVIDIA'),
+       ('Corsair'),
+       ('Kingston'),
+       ('ASUS'),
+       ('LG');
+
 INSERT INTO produto (nome, preco, estoqueAtual, estoqueMinimo, descricao, fornecedor_idfornecedor,
                      categoria_categoria_id)
 VALUES ('Teclado Mecânico RGB', 450.50, 25, 2, 'Switch Blue TKL', 2, 1),
@@ -140,15 +149,6 @@ VALUES ('Teclado Mecânico RGB', 450.50, 25, 2, 'Switch Blue TKL', 2, 1),
        ('Microfone Seiren Mini', 350.00, 15, 5, 'Condensador USB', 2, 4),
        ('Volante G29 Driving Force', 1800.00, 8, 2, 'Com Pedais', 1, 1),
        ('Caixa de Som Z906', 2200.00, 4, 1, 'Surround 5.1 1000W', 1, 4);
-
-INSERT INTO fornecedor (nome)
-VALUES ('Logitech'),
-       ('Razer'),
-       ('NVIDIA'),
-       ('Corsair'),
-       ('Kingston'),
-       ('ASUS'),
-       ('LG');
 
 INSERT INTO compra (dataCompra, valorTotal, usuario_id)
 VALUES ('2026-05-10', 770.50, 2),
