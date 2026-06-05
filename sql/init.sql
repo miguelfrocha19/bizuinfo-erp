@@ -1,143 +1,174 @@
-CREATE DATABASE IF NOT EXISTS bizuinfo_db;
+CREATE DATABASE IF NOT EXISTS bizuinfo_db
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
 USE bizuinfo_db;
 
-CREATE TABLE IF NOT EXISTS usuario (
-                                       id                  INT AUTO_INCREMENT PRIMARY KEY,
-                                       nome                VARCHAR(100)  NOT NULL,
-                                       email               VARCHAR(100)  NOT NULL UNIQUE,
-                                       senha               VARCHAR(255)  NOT NULL,
-                                       role                ENUM('FUNCIONARIO', 'GERENTE', 'ADMIN') NOT NULL DEFAULT 'FUNCIONARIO',
-                                       email_verificado    BOOLEAN       NOT NULL DEFAULT FALSE,
-                                       token_verificacao   VARCHAR(255)  NULL,
-                                       token_reset         VARCHAR(255)  NULL,
-                                       token_expiracao     DATETIME      NULL
-) ENGINE=InnoDB;
+SET NAMES utf8mb4;
 
-CREATE TABLE IF NOT EXISTS tipousuario (
-                                           idtipoUsuario   INT AUTO_INCREMENT PRIMARY KEY,
-                                           descricao       VARCHAR(45) NULL,
-                                           usuario_id      INT NOT NULL,
-                                           CONSTRAINT fk_tipousuario_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
-) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS usuario
+(
+    id                INT AUTO_INCREMENT PRIMARY KEY,
+    nome              VARCHAR(100)                             NOT NULL,
+    email             VARCHAR(100)                             NOT NULL UNIQUE,
+    senha             VARCHAR(255)                             NOT NULL,
+    role              ENUM ('FUNCIONARIO', 'GERENTE', 'ADMIN') NOT NULL DEFAULT 'FUNCIONARIO',
+    email_verificado  BOOLEAN                                  NOT NULL DEFAULT FALSE,
+    token_verificacao VARCHAR(255)                             NULL,
+    token_reset       VARCHAR(255)                             NULL,
+    token_expiracao   DATETIME                                 NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS categoria (
-                                         categoria_id    INT AUTO_INCREMENT PRIMARY KEY,
-                                         nome            VARCHAR(255) NOT NULL
-) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS tipousuario
+(
+    idtipoUsuario INT AUTO_INCREMENT PRIMARY KEY,
+    descricao     VARCHAR(45) NULL,
+    usuario_id    INT         NOT NULL,
+    CONSTRAINT fk_tipousuario_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS fornecedor (
-                                          idfornecedor    INT AUTO_INCREMENT PRIMARY KEY,
-                                          nome            VARCHAR(45) NULL
-) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS categoria
+(
+    categoria_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome         VARCHAR(255) NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS produto (
-                                       idproduto               INT AUTO_INCREMENT PRIMARY KEY,
-                                       nome                    VARCHAR(45) NULL,
-                                       preco                   DOUBLE NULL,
-                                       estoqueAtual            INT NULL,
-                                       descricao               VARCHAR(45) NULL,
-                                       fornecedor_idfornecedor INT NOT NULL,
-                                       categoria_categoria_id  INT NOT NULL,
-                                       CONSTRAINT fk_produto_fornecedor FOREIGN KEY (fornecedor_idfornecedor) REFERENCES fornecedor (idfornecedor),
-                                       CONSTRAINT fk_produto_categoria FOREIGN KEY (categoria_categoria_id) REFERENCES categoria (categoria_id)
-) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS fornecedor
+(
+    idfornecedor INT AUTO_INCREMENT PRIMARY KEY,
+    nome         VARCHAR(45) NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS compra (
-                                      idcompra        INT AUTO_INCREMENT PRIMARY KEY,
-                                      dataCompra      DATE NULL,
-                                      valorTotal      DOUBLE NULL,
-                                      usuario_id      INT NOT NULL,
-                                      CONSTRAINT fk_compra_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
-) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS produto
+(
+    idproduto               INT AUTO_INCREMENT PRIMARY KEY,
+    nome                    VARCHAR(45) NULL,
+    preco                   DOUBLE      NULL,
+    estoqueAtual            INT         NULL,
+    descricao               VARCHAR(45) NULL,
+    fornecedor_idfornecedor INT         NOT NULL,
+    categoria_categoria_id  INT         NOT NULL,
+    CONSTRAINT fk_produto_fornecedor FOREIGN KEY (fornecedor_idfornecedor) REFERENCES fornecedor (idfornecedor),
+    CONSTRAINT fk_produto_categoria FOREIGN KEY (categoria_categoria_id) REFERENCES categoria (categoria_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
-
-CREATE TABLE IF NOT EXISTS itemcompra (
-                                          iditemCompra        INT AUTO_INCREMENT PRIMARY KEY,
-                                          quantidade          INT NULL,
-                                          valorItem           DOUBLE NULL,
-                                          itemCompracol       VARCHAR(45) NULL,
-                                          compra_idcompra     INT NOT NULL,
-                                          produto_idproduto   INT NOT NULL,
-                                          CONSTRAINT fk_itemcompra_compra FOREIGN KEY (compra_idcompra) REFERENCES compra (idcompra),
-                                          CONSTRAINT fk_itemcompra_produto FOREIGN KEY (produto_idproduto) REFERENCES produto (idproduto)
-) ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS log_auditoria (
-                                             id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                             acao VARCHAR(100) NOT NULL,
-                                             detalhe TEXT,
-                                             data_hora DATETIME NOT NULL,
-                                             usuario_responsavel VARCHAR(100)
-) ENGINE=InnoDB;
-
-INSERT INTO usuario (nome, email, senha, role, email_verificado) VALUES
-                                                                     ('Joao Paulo', 'bizuinfo.contato@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3', 'ADMIN', TRUE),
-                                                                     ('Miguel Fernandes', 'miguel.rspp@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086', 'FUNCIONARIO', TRUE),
-                                                                     ('Nicolas Caseiro', 'nickda@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3', 'GERENTE', TRUE),
-                                                                     ('Apagar', 'davi.colosso50@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3', 'FUNCIONARIO', TRUE),
-                                                                     ('Apagar2', 'miguel.control19@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3', 'FUNCIONARIO', FALSE),
-                                                                     ('Teste','teste@gmail.com','$2a$10$z/eXQYdYSLo7R4NVNPwZ9uFvDNn/bM2P9ulTgYP3MaGyPrCwDvRQ.','ADMIN',TRUE);
-
-INSERT INTO tipousuario (descricao, usuario_id) VALUES
-                                                    ('Acesso Total', 1),
-                                                    ('Acesso de Vendas', 2),
-                                                    ('Acesso Gerencial', 3);
-
-INSERT INTO categoria (nome) VALUES
-                                 ('Periféricos'),
-                                 ('Hardware'),
-                                 ('Monitores'),
-                                 ('Webcams e Áudio');
-
-INSERT INTO fornecedor (nome) VALUES
-                                  ('Logitech'),
-                                  ('Razer'),
-                                  ('NVIDIA'),
-                                  ('Corsair');
-
-INSERT INTO produto (nome, preco, estoqueAtual, descricao, fornecedor_idfornecedor, categoria_categoria_id) VALUES
-                                                                                                                ('Teclado Mecânico RGB', 450.50, 25, 'Switch Blue TKL', 2, 1),
-                                                                                                                ('Mouse Gamer Sem Fio', 320.00, 40, '10000 DPI Bateria 50h', 1, 1),
-                                                                                                                ('Placa de Vídeo RTX 4060', 2150.00, 10, '8GB GDDR6 Dual Fan', 3, 2),
-                                                                                                                ('Headset Gamer', 280.90, 30, 'Som Surround 7.1', 4, 4),
-                                                                                                                ('Webcam Full HD', 199.99, 15, '1080p 60fps c/ Microfone', 1, 4);
-
-INSERT INTO compra (dataCompra, valorTotal, usuario_id) VALUES
-                                                            ('2026-05-10', 770.50, 2),
-                                                            ('2026-05-15', 2150.00, 1),
-                                                            ('2026-05-18', 480.89, 3);
-
-INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto) VALUES
-                                                                                                      (1, 450.50, 'Separado', 1, 1),
-                                                                                                      (1, 320.00, 'Separado', 1, 2);
-
-INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto) VALUES
-    (1, 2150.00, 'Enviado', 2, 3);
-
-INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto) VALUES
-                                                                                                      (1, 280.90, 'Processando', 3, 4),
-                                                                                                      (1, 199.99, 'Processando', 3, 5);
+CREATE TABLE IF NOT EXISTS compra
+(
+    idcompra   INT AUTO_INCREMENT PRIMARY KEY,
+    dataCompra DATE   NULL,
+    valorTotal DOUBLE NULL,
+    usuario_id INT    NOT NULL,
+    CONSTRAINT fk_compra_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 
-INSERT INTO fornecedor (nome) VALUES
-                                  ('Kingston'),
-                                  ('ASUS'),
-                                  ('LG');
+CREATE TABLE IF NOT EXISTS itemcompra
+(
+    iditemCompra      INT AUTO_INCREMENT PRIMARY KEY,
+    quantidade        INT         NULL,
+    valorItem         DOUBLE      NULL,
+    itemCompracol     VARCHAR(45) NULL,
+    compra_idcompra   INT         NOT NULL,
+    produto_idproduto INT         NOT NULL,
+    CONSTRAINT fk_itemcompra_compra FOREIGN KEY (compra_idcompra) REFERENCES compra (idcompra),
+    CONSTRAINT fk_itemcompra_produto FOREIGN KEY (produto_idproduto) REFERENCES produto (idproduto)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
-INSERT INTO categoria (nome) VALUES
-                                 ('Armazenamento'),
-                                 ('Placas-Mãe');
+CREATE TABLE IF NOT EXISTS log_auditoria
+(
+    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    acao                VARCHAR(100) NOT NULL,
+    detalhe             TEXT,
+    data_hora           DATETIME     NOT NULL,
+    usuario_responsavel VARCHAR(100)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
-INSERT INTO produto (nome, preco, estoqueAtual, descricao, fornecedor_idfornecedor, categoria_categoria_id) VALUES
-                                                                                                                ('Monitor LG UltraGear 24"', 1150.00, 20, '144Hz 1ms IPS', 7, 3),
-                                                                                                                ('SSD 1TB NVMe M.2', 450.90, 50, 'Leitura 3500MB/s', 5, 5),
-                                                                                                                ('Memória RAM 16GB DDR4', 280.00, 40, '3200MHz CL16', 5, 2),
-                                                                                                                ('Placa-Mãe ROG Strix B550', 1320.00, 12, 'AM4 ATX Wi-Fi', 6, 6),
-                                                                                                                ('Placa de Vídeo RTX 4070 Ti', 5400.00, 5, '12GB GDDR6X', 6, 2),
-                                                                                                                ('Mousepad Gamer Estendido', 120.00, 60, 'Superfície Speed 90x40cm', 2, 1),
-                                                                                                                ('Microfone Seiren Mini', 350.00, 15, 'Condensador USB', 2, 4),
-                                                                                                                ('Volante G29 Driving Force', 1800.00, 8, 'Com Pedais', 1, 1),
-                                                                                                                ('Caixa de Som Z906', 2200.00, 4, 'Surround 5.1 1000W', 1, 4);
+INSERT INTO usuario (nome, email, senha, role, email_verificado)
+VALUES ('Joao Paulo', 'bizuinfo.contato@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3', 'ADMIN', TRUE),
+       ('Miguel Fernandes', 'miguel.rspp@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
+        'FUNCIONARIO', TRUE),
+       ('Nicolas Caseiro', 'nickda@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3', 'GERENTE', TRUE),
+       ('Apagar', 'davi.colosso50@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3', 'FUNCIONARIO', TRUE),
+       ('Apagar2', 'miguel.control19@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3', 'FUNCIONARIO', FALSE),
+       ('Teste', 'teste@gmail.com', '$2a$10$z/eXQYdYSLo7R4NVNPwZ9uFvDNn/bM2P9ulTgYP3MaGyPrCwDvRQ.', 'ADMIN', TRUE);
+
+INSERT INTO tipousuario (descricao, usuario_id)
+VALUES ('Acesso Total', 1),
+       ('Acesso de Vendas', 2),
+       ('Acesso Gerencial', 3);
+
+INSERT INTO categoria (nome)
+VALUES ('Periféricos'),
+       ('Hardware'),
+       ('Monitores'),
+       ('Teste Á É Í Ó Ú Ç');
+
+INSERT INTO fornecedor (nome)
+VALUES ('Logitech'),
+       ('Razer'),
+       ('NVIDIA'),
+       ('Corsair');
+
+INSERT INTO produto (nome, preco, estoqueAtual, descricao, fornecedor_idfornecedor, categoria_categoria_id)
+VALUES ('Teclado Mecânico RGB', 450.50, 25, 'Switch Blue TKL', 2, 1),
+       ('Mouse Gamer Sem Fio', 320.00, 40, '10000 DPI Bateria 50h', 1, 1),
+       ('Placa de Vídeo RTX 4060', 2150.00, 10, '8GB GDDR6 Dual Fan', 3, 2),
+       ('Headset Gamer', 280.90, 30, 'Som Surround 7.1', 4, 4),
+       ('Webcam Full HD', 199.99, 15, '1080p 60fps c/ Microfone', 1, 4);
+
+INSERT INTO compra (dataCompra, valorTotal, usuario_id)
+VALUES ('2026-05-10', 770.50, 2),
+       ('2026-05-15', 2150.00, 1),
+       ('2026-05-18', 480.89, 3);
+
+INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto)
+VALUES (1, 450.50, 'Separado', 1, 1),
+       (1, 320.00, 'Separado', 1, 2);
+
+INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto)
+VALUES (1, 2150.00, 'Enviado', 2, 3);
+
+INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto)
+VALUES (1, 280.90, 'Processando', 3, 4),
+       (1, 199.99, 'Processando', 3, 5);
+
+
+INSERT INTO fornecedor (nome)
+VALUES ('Kingston'),
+       ('ASUS'),
+       ('LG');
+
+INSERT INTO categoria (nome)
+VALUES ('Armazenamento'),
+       ('Placas-Mãe');
+
+INSERT INTO produto (nome, preco, estoqueAtual, descricao, fornecedor_idfornecedor, categoria_categoria_id)
+VALUES ('Monitor LG UltraGear 24"', 1150.00, 20, '144Hz 1ms IPS', 7, 3),
+       ('SSD 1TB NVMe M.2', 450.90, 50, 'Leitura 3500MB/s', 5, 5),
+       ('Memória RAM 16GB DDR4', 280.00, 40, '3200MHz CL16', 5, 2),
+       ('Placa-Mãe ROG Strix B550', 1320.00, 12, 'AM4 ATX Wi-Fi', 6, 6),
+       ('Placa de Vídeo RTX 4070 Ti', 5400.00, 5, '12GB GDDR6X', 6, 2),
+       ('Mousepad Gamer Estendido', 120.00, 60, 'Superfície Speed 90x40cm', 2, 1),
+       ('Microfone Seiren Mini', 350.00, 15, 'Condensador USB', 2, 4),
+       ('Volante G29 Driving Force', 1800.00, 8, 'Com Pedais', 1, 1),
+       ('Caixa de Som Z906', 2200.00, 4, 'Surround 5.1 1000W', 1, 4);
+
 SET GLOBAL event_scheduler = ON;
 DELIMITER $$
 CREATE EVENT IF NOT EXISTS limpar_usuarios_pendentes
@@ -145,7 +176,8 @@ CREATE EVENT IF NOT EXISTS limpar_usuarios_pendentes
     COMMENT 'Remove usuários que não confirmaram email'
     DO
     BEGIN
-        DELETE FROM usuario
+        DELETE
+        FROM usuario
         WHERE email_verificado = FALSE
           AND token_expiracao IS NOT NULL
           AND token_expiracao < NOW();
