@@ -9,6 +9,11 @@
     <version>1.0-SNAPSHOT</version>
     <name>bizuinfo.erp Maven Webapp</name>
     <url>https://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
 
         <!-- Jakarta EE -->

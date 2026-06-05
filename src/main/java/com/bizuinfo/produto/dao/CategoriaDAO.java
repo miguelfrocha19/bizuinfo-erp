@@ -8,6 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -33,6 +34,18 @@ public class CategoriaDAO extends GenericoDAO<Categoria> {
         } catch (NoResultException e) {
 
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Categoria> listarTodos() {
+
+        try (EntityManager em = JPAutil.getEntityManager()) {
+
+            return em.createQuery(
+                    "SELECT c FROM Categoria c",
+                    Categoria.class
+            ).getResultList();
         }
     }
 }
