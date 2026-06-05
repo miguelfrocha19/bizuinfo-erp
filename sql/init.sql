@@ -95,7 +95,8 @@ CREATE TABLE IF NOT EXISTS log_auditoria
     acao                VARCHAR(100) NOT NULL,
     detalhe             TEXT,
     data_hora           DATETIME     NOT NULL,
-    usuario_responsavel VARCHAR(100)
+    usuario_responsavel VARCHAR(100),
+    ip_origem VARCHAR (100)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
