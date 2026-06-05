@@ -81,11 +81,9 @@ public class UsuarioDAO extends GenericoDAO<Usuario> {
         try {
             em.getTransaction().begin();
 
-            // 1. EXCLUI AS COMPRAS PRIMEIRO (Bypass no bug de parâmetros do JPA)
             em.createNativeQuery("DELETE FROM compra WHERE usuario_id = " + id)
                     .executeUpdate();
 
-            // 2. EXCLUI O USUÁRIO
             Usuario ref = em.getReference(Usuario.class, id);
             em.remove(ref);
 

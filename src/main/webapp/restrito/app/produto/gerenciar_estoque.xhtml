@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Gerenciar Produtos - BizuInfo ERP</title>
+    <meta charset="UTF-8" />
+    <h:outputStylesheet library="css" name="estilo.css"/>
+    <style>
+        html, body {
+            display: block !important;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            height: auto;
+        }
+        .container-tabela {
+            margin-top: 20px;
+            padding:20px;
+        }
+        .topbar {
+            flex: 0 0 auto;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            background: #ffffff;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .spacer {
+            flex: 1;
+        }
+
+        .status-ativo {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-inativo {
+            color: red;
+            font-weight: bold;
+        }
+
+        .content-area {
+            padding: 15px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <h:form id="formProdutos">
+        <p:growl id="growl" showDetail="true" />
+
+
+        <div class="topbar">
+            <p:button value="Dashboard"
+                      icon="pi pi-home"
+                      outcome="/restrito/app/admin/dashboard_admin.xhtml"/>
+
+
+            <p:menuButton value="Produtos" icon="pi pi-box">
+                <p:menuitem value="Gerenciar Produtos"
+                            outcome="/restrito/app/produto/gerenciar_produtos.xhtml"/>
+                <p:menuitem value="Gerenciar Categorias"
+                            outcome="/restrito/app/produto/gerenciar_categorias.xhtml"/>
+                <p:menuitem value="Gerenciar Estoque"
+                            outcome="/restrito/app/produto/gerenciar_estoque.xhtml"/>
+            </p:menuButton>
+
+            <div class="spacer"></div>
+
+            <p:menuButton icon="pi pi-user" style="margin-left:auto">
+                <p:menuitem value="Meu Perfil"
+                            outcome="/restrito/app/perfil/perfil_usuario.xhtml?faces-redirect=true"/>
+                <p:menuitem value="Sair"
+                            icon="pi pi-sign-out"
+                            action="#{loginBean.sair}"/>
+            </p:menuButton>
+        </div>
+
+        <p:panel header="Gestão de Estoque">
+            <div class="container-tabela">
+                <p:dataTable value="#{estoqueBean.produtos}" var="p"
+                             emptyMessage="Nenhum produto encontrado. Verifique se o banco foi populado."
+                             styleClass="p-mt-2">
+
+                    <p:column headerText="ID" width="50" style="text-align: center;">
+                        <h:outputText value="#{p.id}" />
+                    </p:column>
+
+                    <p:column headerText="Produto">
+                        <h:outputText value="#{p.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Categoria" style="text-align: center;">
+                        <h:outputText value="#{p.categoria}" />
+                    </p:column>
+
+                    <p:column headerText="Estoque Atual" style="text-align: center;">
+                        <h:outputText value="#{p.estoqueAtual}"
+                                      style="font-weight: bold; color: #{p.estoqueAtual le p.estoqueMinimo ? 'red' : 'green'};"/>
+                    </p:column>
+
+                    <p:column headerText="Estoque Mínimo" width="150" style="text-align: center;">
+                        <h:outputText value="#{p.estoqueMinimo}" />
+                    </p:column>
+
+                    <p:column headerText="Ações" width="150" style="text-align: center;">
+                        <p:commandButton icon="pi pi-box" value="Movimentar"
+                                         action="#{estoqueBean.prepararMovimentacao(p)}"
+                                         update=":formDialogoMovimentacao"
+                                         oncomplete="PF('dlgMovimentacao').show()" />
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:panel>
+    </h:form>
+
+    <p:dialog header="Movimentar Estoque" widgetVar="dlgMovimentacao" modal="true" resizable="false">
+        <h:form id="formDialogoMovimentacao">
+            <h:panelGrid columns="2" cellpadding="10">
+                <h:outputText value="Produto Selecionado:" style="font-weight: bold;"/>
+                <h:outputText value="#{estoqueBean.produtoSelecionado.nome}" />
+
+                <h:outputText value="Quantidade (Valores negativos para saídas):" />
+                <p:spinner value="#{estoqueBean.quantidadeMovimentacao}" />
+            </h:panelGrid>
+            <p:divider/>
+            <div style="text-align: right; margin-top: 10px;">
+                <p:commandButton value="Confirmar" icon="pi pi-check"
+                                 action="#{estoqueBean.salvarMovimentacao}"
+                                 update=":formProdutos :formProdutos:growl"
+                                 oncomplete="PF('dlgMovimentacao').hide()" />
+            </div>
+        </h:form>
+    </p:dialog>
+</h:body>
+</html>

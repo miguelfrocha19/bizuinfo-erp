@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS produto
     nome                    VARCHAR(45) NULL,
     preco                   DOUBLE      NULL,
     estoqueAtual            INT         NULL,
+    estoqueMinimo           INT DEFAULT 5, -- NOVA COLUNA
     descricao               VARCHAR(45) NULL,
     fornecedor_idfornecedor INT         NOT NULL,
     categoria_categoria_id  INT         NOT NULL,
@@ -60,7 +61,7 @@ CREATE TABLE IF NOT EXISTS produto
     CONSTRAINT fk_produto_categoria FOREIGN KEY (categoria_categoria_id) REFERENCES categoria (categoria_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+  COLLATE = utf8mb4_unicode_ci;;
 
 CREATE TABLE IF NOT EXISTS compra
 (
@@ -94,19 +95,20 @@ CREATE TABLE IF NOT EXISTS log_auditoria
     acao                VARCHAR(100) NOT NULL,
     detalhe             TEXT,
     data_hora           DATETIME     NOT NULL,
-    usuario_responsavel VARCHAR(100),
-    ip_origem VARCHAR(100)
+    usuario_responsavel VARCHAR(100)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
 INSERT INTO usuario (nome, email, senha, role, email_verificado)
-VALUES ('Joao Paulo', 'bizuinfo.contato@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086', 'ADMIN', TRUE),
+VALUES ('Joao Paulo', 'bizuinfo.contato@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
+        'ADMIN', TRUE),
        ('Miguel Fernandes', 'miguel.rspp@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
         'FUNCIONARIO', TRUE),
-       ('Nicolas Caseiro', 'nicolascaseirodeabreu@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086', 'GERENTE', TRUE),
-       ('Apagar', 'davi.colosso50@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086', 'FUNCIONARIO', TRUE),
-       ('Apagar2', 'miguel.control19@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086', 'FUNCIONARIO', FALSE),
+       ('Nicolas Caseiro', 'nickcda@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
+        'GERENTE', TRUE),
+       ('Apagar', 'davi.colosso50@gmail.com', '', 'FUNCIONARIO', TRUE),
+       ('Apagar2', 'miguel.control19@gmail.com', '', 'FUNCIONARIO', FALSE),
        ('Teste', 'teste@gmail.com', '$2a$10$z/eXQYdYSLo7R4NVNPwZ9uFvDNn/bM2P9ulTgYP3MaGyPrCwDvRQ.', 'ADMIN', TRUE);
 
 INSERT INTO tipousuario (descricao, usuario_id)
@@ -118,20 +120,35 @@ INSERT INTO categoria (nome)
 VALUES ('Periféricos'),
        ('Hardware'),
        ('Monitores'),
-       ('Teste Á É Í Ó Ú Ç');
+       ('Webcams e Áudio'),
+       ('Armazenamento'),
+       ('Placas-Mãe');
+
+INSERT INTO produto (nome, preco, estoqueAtual, estoqueMinimo, descricao, fornecedor_idfornecedor,
+                     categoria_categoria_id)
+VALUES ('Teclado Mecânico RGB', 450.50, 25, 2, 'Switch Blue TKL', 2, 1),
+       ('Mouse Gamer Sem Fio', 320.00, 40, 5, '10000 DPI Bateria 50h', 1, 1),
+       ('Placa de Vídeo RTX 4060', 2150.00, 10, 1, '8GB GDDR6 Dual Fan', 3, 2),
+       ('Headset Gamer', 280.90, 30, 5, 'Som Surround 7.1', 4, 4),
+       ('Webcam Full HD', 199.99, 15, 5, '1080p 60fps c/ Microfone', 1, 4),
+       ('Monitor LG UltraGear 24"', 1150.00, 20, 2, '144Hz 1ms IPS', 7, 3),
+       ('SSD 1TB NVMe M.2', 450.90, 50, 10, 'Leitura 3500MB/s', 5, 5),
+       ('Memória RAM 16GB DDR4', 280.00, 40, 5, '3200MHz CL16', 5, 2),
+       ('Placa-Mãe ROG Strix B550', 1320.00, 12, 3, 'AM4 ATX Wi-Fi', 6, 6),
+       ('Placa de Vídeo RTX 4070 Ti', 5400.00, 5, 1, '12GB GDDR6X', 6, 2),
+       ('Mousepad Gamer Estendido', 120.00, 60, 5, 'Superfície Speed 90x40cm', 2, 1),
+       ('Microfone Seiren Mini', 350.00, 15, 5, 'Condensador USB', 2, 4),
+       ('Volante G29 Driving Force', 1800.00, 8, 2, 'Com Pedais', 1, 1),
+       ('Caixa de Som Z906', 2200.00, 4, 1, 'Surround 5.1 1000W', 1, 4);
 
 INSERT INTO fornecedor (nome)
 VALUES ('Logitech'),
        ('Razer'),
        ('NVIDIA'),
-       ('Corsair');
-
-INSERT INTO produto (nome, preco, estoqueAtual, descricao, fornecedor_idfornecedor, categoria_categoria_id)
-VALUES ('Teclado Mecânico RGB', 450.50, 25, 'Switch Blue TKL', 2, 1),
-       ('Mouse Gamer Sem Fio', 320.00, 40, '10000 DPI Bateria 50h', 1, 1),
-       ('Placa de Vídeo RTX 4060', 2150.00, 10, '8GB GDDR6 Dual Fan', 3, 2),
-       ('Headset Gamer', 280.90, 30, 'Som Surround 7.1', 4, 4),
-       ('Webcam Full HD', 199.99, 15, '1080p 60fps c/ Microfone', 1, 4);
+       ('Corsair'),
+       ('Kingston'),
+       ('ASUS'),
+       ('LG');
 
 INSERT INTO compra (dataCompra, valorTotal, usuario_id)
 VALUES ('2026-05-10', 770.50, 2),
@@ -150,25 +167,6 @@ VALUES (1, 280.90, 'Processando', 3, 4),
        (1, 199.99, 'Processando', 3, 5);
 
 
-INSERT INTO fornecedor (nome)
-VALUES ('Kingston'),
-       ('ASUS'),
-       ('LG');
-
-INSERT INTO categoria (nome)
-VALUES ('Armazenamento'),
-       ('Placas-Mãe');
-
-INSERT INTO produto (nome, preco, estoqueAtual, descricao, fornecedor_idfornecedor, categoria_categoria_id)
-VALUES ('Monitor LG UltraGear 24"', 1150.00, 20, '144Hz 1ms IPS', 7, 3),
-       ('SSD 1TB NVMe M.2', 450.90, 50, 'Leitura 3500MB/s', 5, 5),
-       ('Memória RAM 16GB DDR4', 280.00, 40, '3200MHz CL16', 5, 2),
-       ('Placa-Mãe ROG Strix B550', 1320.00, 12, 'AM4 ATX Wi-Fi', 6, 6),
-       ('Placa de Vídeo RTX 4070 Ti', 5400.00, 5, '12GB GDDR6X', 6, 2),
-       ('Mousepad Gamer Estendido', 120.00, 60, 'Superfície Speed 90x40cm', 2, 1),
-       ('Microfone Seiren Mini', 350.00, 15, 'Condensador USB', 2, 4),
-       ('Volante G29 Driving Force', 1800.00, 8, 'Com Pedais', 1, 1),
-       ('Caixa de Som Z906', 2200.00, 4, 'Surround 5.1 1000W', 1, 4);
 
 SET GLOBAL event_scheduler = ON;
 DELIMITER $$
