@@ -5,7 +5,7 @@
 
 <h:head>
 
-    <title>Dashboard Admin - BizuInfo</title>
+    <title>Logs de Auditoria - BizuInfo</title>
 
     <h:outputStylesheet library="css" name="estilo.css"/>
 
@@ -40,13 +40,20 @@
             padding: 15px;
         }
 
+        .table-container {
+            max-height: 75vh;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
     </style>
 
 </h:head>
 
 <h:body>
 
-    <h:form id="formDashboard">
+    <h:form id="formLogs">
 
         <div class="topbar">
 
@@ -93,18 +100,53 @@
 
         <div class="content-area">
 
-            <p:panel header="Resumo Geral">
+            <p:panel header="Logs de Auditoria">
 
-                <h:panelGrid columns="1" cellpadding="8">
+                <div class="table-container">
 
-                    <h:outputText value="Bem-vindo, #{loginBean.usuarioLogado.nome}"
-                                  style="font-size:18px;font-weight:bold"/>
+                    <p:dataTable value="#{logAuditoriaBean.logs}"
+                                 var="l"
+                                 emptyMessage="Nenhum log encontrado"
+                                 sortMode="single">
 
-                    <h:outputText value="Email: #{loginBean.usuarioLogado.email}"/>
+                        <p:column headerText="Data/Hora"
+                                  sortBy="#{l.dataHora}">
 
-                    <h:outputText value="Perfil: #{loginBean.usuarioLogado.role}"/>
+                            <h:outputText value="#{l.dataHoraFormatada}"/>
 
-                </h:panelGrid>
+                        </p:column>
+
+                        <p:column headerText="Ação"
+                                  sortBy="#{l.acao}">
+
+                            <h:outputText value="#{l.acao}"/>
+
+                        </p:column>
+
+                        <p:column headerText="Detalhe">
+
+                            <h:outputText value="#{l.detalhe}"
+                                          style="white-space: normal; word-break: break-word;"/>
+
+                        </p:column>
+
+                        <p:column headerText="Usuário"
+                                  sortBy="#{l.usuarioResponsavel}">
+
+                            <h:outputText value="#{l.usuarioResponsavel}"/>
+
+                        </p:column>
+
+                        <p:column headerText="IP Origem"
+                                  sortBy="#{l.ipOrigem}">
+
+                            <h:outputText value="#{l.ipOrigem}"/>
+
+                        </p:column>
+
+                    </p:dataTable>
+
+                </div>
 
             </p:panel>
 

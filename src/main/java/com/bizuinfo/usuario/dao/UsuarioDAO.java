@@ -39,12 +39,15 @@ public class UsuarioDAO extends GenericoDAO<Usuario> {
 
     public List<Usuario> listarTodos() {
 
-        try (EntityManager em = JPAutil.getEntityManager()) {
+        EntityManager em = JPAutil.getEntityManager();
 
+        try {
             return em.createQuery(
                     "SELECT u FROM Usuario u ORDER BY u.id",
                     Usuario.class
             ).getResultList();
+        } finally {
+            em.close();
         }
     }
 

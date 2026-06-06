@@ -4,6 +4,7 @@ import com.bizuinfo.usuario.dao.UsuarioDAO;
 import com.bizuinfo.usuario.model.Role;
 import com.bizuinfo.usuario.model.Usuario;
 import com.bizuinfo.usuario.service.LogAuditoriaService;
+import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -13,7 +14,6 @@ import jakarta.inject.Named;
 import org.primefaces.event.RowEditEvent;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 @Named
@@ -29,133 +29,87 @@ public class UsuarioAdminBean implements Serializable {
     @Inject
     private LoginBean loginBean;
 
-    private int abaAtiva = 0;
     private Long idUsuarioSelecionado;
-    private List<Usuario> usuariosCache;
 
-    public void irParaDashboard() {
-        abaAtiva = 0;
-    }
+    private List<Usuario> usuarios;
 
-    public void irParaUsuarios() {
-        abaAtiva = 1;
-    }
-
-    public void irParaLogs() {
-        abaAtiva = 2;
-    }
-
-    public int getAbaAtiva() {
-        return abaAtiva;
+    @PostConstruct
+    public void init() {
+        usuarios = usuarioDAO.listarTodos();
     }
 
     public List<Usuario> getUsuarios() {
-        if (usuariosCache == null) {
-            try {
-                usuariosCache = usuarioDAO.listarTodos();
-            } catch (Exception e) {
-                e.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Erro ao carregar usuários: " + e.getMessage(), null)
-                );
-                usuariosCache = Collections.emptyList();
-            }
+        if (usuarios == null || usuarios.isEmpty()) {
+            usuarios = usuarioDAO.listarTodos();
         }
-        return usuariosCache;
+        return usuarios;
+    }
+
+    private void recarregar() {
+        usuarios = usuarioDAO.listarTodos();
     }
 
     public void salvar(RowEditEvent<Usuario> event) {
-        salvar(event.getObject());
-    }
 
-    public void salvar(Usuario usuario) {
+        Usuario editado = event.getObject();
 
         try {
+            Usuario original = usuarioDAO.buscarPorId(editado.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-            if (usuario == null || usuario.getId() == null) {
-                return;
-            }
-
-            Usuario original = usuarioDAO.buscarPorId(usuario.getId())
-                    .orElseThrow(() ->
-                            new RuntimeException("Usuário não encontrado"));
-
-            // impede remover ADMIN de si mesmo
             if (loginBean.getUsuarioLogado() != null &&
-                    loginBean.getUsuarioLogado().getId().equals(usuario.getId()) &&
-                    usuario.getRole() != Role.ADMIN) {
+                    loginBean.getUsuarioLogado().getId().equals(editado.getId()) &&
+                    editado.getRole() != Role.ADMIN) {
 
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(
-                                FacesMessage.SEVERITY_ERROR,
-                                "Você não pode remover seu próprio ADMIN",
-                                null
-                        )
-                );
-
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Você não pode remover seu próprio ADMIN", null));
                 return;
             }
 
             StringBuilder alteracoes = new StringBuilder();
 
-            if (!original.getNome().equals(usuario.getNome())) {
-
+            if (!original.getNome().equals(editado.getNome())) {
                 alteracoes.append("Nome: ")
                         .append(original.getNome())
                         .append(" -> ")
-                        .append(usuario.getNome())
+                        .append(editado.getNome())
                         .append(" | ");
-
-                original.setNome(usuario.getNome());
+                original.setNome(editado.getNome());
             }
 
-            if (!original.getEmail().equals(usuario.getEmail())) {
-
+            if (!original.getEmail().equals(editado.getEmail())) {
                 alteracoes.append("Email: ")
                         .append(original.getEmail())
                         .append(" -> ")
-                        .append(usuario.getEmail())
+                        .append(editado.getEmail())
                         .append(" | ");
-
-                original.setEmail(usuario.getEmail());
+                original.setEmail(editado.getEmail());
             }
 
-            if (original.getRole() != usuario.getRole()) {
-
+            if (original.getRole() != editado.getRole()) {
                 alteracoes.append("Role: ")
                         .append(original.getRole())
                         .append(" -> ")
-                        .append(usuario.getRole())
+                        .append(editado.getRole())
                         .append(" | ");
-
-                original.setRole(usuario.getRole());
+                original.setRole(editado.getRole());
             }
 
-            if (original.getEmailVerificado() != usuario.getEmailVerificado()) {
-
+            if (original.getEmailVerificado() != editado.getEmailVerificado()) {
                 alteracoes.append("Status: ")
                         .append(original.getEmailVerificado() ? "ATIVO" : "INATIVO")
                         .append(" -> ")
-                        .append(usuario.getEmailVerificado() ? "ATIVO" : "INATIVO")
+                        .append(editado.getEmailVerificado() ? "ATIVO" : "INATIVO")
                         .append(" | ");
 
-                original.setEmailVerificado(usuario.getEmailVerificado());
+                original.setEmailVerificado(editado.getEmailVerificado());
             }
 
             if (alteracoes.isEmpty()) {
-
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(
-                                FacesMessage.SEVERITY_WARN,
-                                "Nenhuma alteração foi realizada",
-                                null
-                        )
-                );
-
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                "Nenhuma alteração foi realizada", null));
                 return;
             }
 
@@ -167,62 +121,18 @@ public class UsuarioAdminBean implements Serializable {
                     loginBean.getUsuarioLogado().getNome()
             );
 
-            usuariosCache = usuarioDAO.listarTodos();
+            recarregar();
 
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(
-                            FacesMessage.SEVERITY_INFO,
-                            "Usuário atualizado com sucesso",
-                            null
-                    )
-            );
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(
-                            FacesMessage.SEVERITY_ERROR,
-                            "Erro ao salvar usuário: " + e.getMessage(),
-                            null
-                    )
-            );
-        }
-    }
-
-    public void alternarAtivo(Usuario usuario) {
-        try {
-            if (usuario == null) return;
-
-            boolean statusAtual = usuario.getEmailVerificado();
-            usuario.setEmailVerificado(!statusAtual);
-
-            usuarioDAO.salvar(usuario);
-
-            logAuditoriaService.registrar(
-                    "ALTERAR_STATUS",
-                    "Alterou status do usuário ID: " + usuario.getId() + " para " + (usuario.getEmailVerificado() ? "ATIVO" : "INATIVO"),
-                    loginBean.getUsuarioLogado().getNome()
-            );
-
-            usuariosCache = usuarioDAO.listarTodos();
-
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
+            FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Status alterado com sucesso", null)
-            );
+                            "Usuário atualizado com sucesso", null));
 
         } catch (Exception e) {
             e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
+
+            FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Erro ao alterar status: " + e.getMessage(), null)
-            );
+                            "Erro ao salvar usuário: " + e.getMessage(), null));
         }
     }
 
@@ -233,17 +143,16 @@ public class UsuarioAdminBean implements Serializable {
     }
 
     public void excluirSelecionado() {
+
         try {
             if (idUsuarioSelecionado == null) return;
 
             if (loginBean.getUsuarioLogado() != null &&
                     loginBean.getUsuarioLogado().getId().equals(idUsuarioSelecionado)) {
 
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
+                FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Você não pode excluir seu próprio usuário", null)
-                );
+                                "Você não pode excluir seu próprio usuário", null));
                 return;
             }
 
@@ -256,21 +165,23 @@ public class UsuarioAdminBean implements Serializable {
             );
 
             idUsuarioSelecionado = null;
-            usuariosCache = usuarioDAO.listarTodos();
 
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
+            recarregar();
+
+            FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Usuário removido com sucesso", null)
-            );
+                            "Usuário removido com sucesso", null));
 
         } catch (Exception e) {
             e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
+
+            FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Erro ao excluir usuário: " + e.getMessage(), null)
-            );
+                            "Erro ao excluir usuário: " + e.getMessage(), null));
         }
+    }
+
+    public Long getIdUsuarioSelecionado() {
+        return idUsuarioSelecionado;
     }
 }
