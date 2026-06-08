@@ -1,0 +1,11 @@
+html,
+body {
+    display: block;
+    background-color: #f4f4f9;
+    height: auto;
+}
+
+.container-tabela {
+    margin-top: 20px;
+    padding: 20px;
+}

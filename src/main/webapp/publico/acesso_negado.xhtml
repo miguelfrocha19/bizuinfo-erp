@@ -6,7 +6,7 @@
 <h:head>
     <title>Acesso Negado - BizuInfo</title>
 
-    <h:outputStylesheet library="css" name="estilo.css"/>
+    <h:outputStylesheet library="css" name="auth.css"/>
 </h:head>
 
 <h:body>
@@ -27,7 +27,11 @@
                 <p:button
                         value="Voltar para Dashboard"
                         icon="pi pi-arrow-left"
-                        outcome="#{sessaoBean.dashboard()}"
+                        outcome="#{sessionScope.usuario.role eq 'ADMIN'
+                        ? '/restrito/app/admin/dashboard'
+                        : sessionScope.usuario.role eq 'GERENTE'
+                        ? '/restrito/app/gerente/dashboard'
+                        : '/restrito/app/funcionario/dashboard'}"
                         styleClass="full-width p-mt-2" />
 
             </h:panelGrid>

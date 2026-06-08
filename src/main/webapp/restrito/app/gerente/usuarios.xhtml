@@ -7,59 +7,8 @@
 <h:head>
 
     <title>Gestão de Usuários - BizuInfo</title>
-
-    <h:outputStylesheet library="css" name="estilo.css"/>
-
-    <style>
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .topbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-
-            background: #fff;
-            padding: 12px;
-
-            border-bottom: 1px solid #ddd;
-
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .spacer {
-            flex: 1;
-        }
-
-        .status-ativo {
-            color: green;
-            font-weight: bold;
-        }
-
-        .status-inativo {
-            color: red;
-            font-weight: bold;
-        }
-
-        .content-area {
-            padding: 15px;
-        }
-
-        .table-container {
-            max-height: 65vh;
-            overflow-y: auto;
-
-            border: 1px solid #ddd;
-            border-radius: 6px;
-        }
-
-    </style>
+    <h:outputStylesheet library="css" name="global.css"/>
+    <h:outputStylesheet library="css" name="usuarios.css"/>
 
 </h:head>
 
@@ -71,7 +20,7 @@
 
             <p:button value="Dashboard"
                       icon="pi pi-home"
-                      outcome="/restrito/app/gerente/dashboard_gerente.xhtml"/>
+                      outcome="/restrito/app/gerente/dashboard.xhtml"/>
 
             <p:button value="Usuários"
                       icon="pi pi-users"

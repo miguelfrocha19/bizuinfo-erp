@@ -1,0 +1,21 @@
+.status-ativo {
+    color: green;
+    font-weight: bold;
+}
+
+.status-inativo {
+    color: red;
+    font-weight: bold;
+}
+
+.content-area {
+    padding: 15px;
+}
+
+.table-container {
+    max-height: 65vh;
+    overflow-y: auto;
+
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}

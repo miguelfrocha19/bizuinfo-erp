@@ -27,8 +27,8 @@ public class Paginas {
 
     // Dashboards                        NOME                ACESSO   MÓDULO  CREDENCIAL       PÁGINA
     public static final String DASHBOARD                  = RESTRITO + APP + FUNCIONARIO + "dashboard.xhtml";
-    public static final String DASHBOARD_GERENTE          = RESTRITO + APP + GERENTE     + "dashboard_gerente.xhtml";
-    public static final String DASHBOARD_ADMIN            = RESTRITO + APP + ADMIN       + "dashboard_admin.xhtml";
+    public static final String DASHBOARD_GERENTE          = RESTRITO + APP + GERENTE     + "dashboard.xhtml";
+    public static final String DASHBOARD_ADMIN            = RESTRITO + APP + ADMIN       + "dashboard.xhtml";
 
     // Perfil
     public static final String PERFIL_USUARIO             = RESTRITO + APP + PERFIL      + "perfil_usuario.xhtml";

@@ -207,9 +207,9 @@ public class PerfilBean implements Serializable {
 
         String destino = switch (usuario.getRole()) {
 
-            case ADMIN -> ctx + "/restrito/app/admin/dashboard_admin.xhtml";
+            case ADMIN -> ctx + "/restrito/app/admin/dashboard.xhtml";
 
-            case GERENTE -> ctx + "/restrito/app/gerente/dashboard_gerente.xhtml";
+            case GERENTE -> ctx + "/restrito/app/gerente/dashboard.xhtml";
 
             default -> ctx + "/restrito/app/funcionario/dashboard.xhtml";
         };

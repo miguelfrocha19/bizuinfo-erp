@@ -7,51 +7,8 @@
 <h:head>
     <title>Gerenciar Produtos - BizuInfo ERP</title>
     <meta charset="UTF-8" />
-    <h:outputStylesheet library="css" name="estilo.css"/>
-    <style>
-        html, body {
-            display: block !important;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f9;
-            height: auto;
-        }
-        .container-tabela {
-            margin-top: 20px;
-            padding:20px;
-        }
-        .topbar {
-            flex: 0 0 auto;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-
-            background: #ffffff;
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .spacer {
-            flex: 1;
-        }
-
-        .status-ativo {
-            color: green;
-            font-weight: bold;
-        }
-
-        .status-inativo {
-            color: red;
-            font-weight: bold;
-        }
-
-        .content-area {
-            padding: 15px;
-        }
-    </style>
+    <h:outputStylesheet library="css" name="global.css"/>
+    <h:outputStylesheet library="css" name="produto.css"/>
 </h:head>
 
 <h:body>
@@ -65,7 +22,7 @@
 
                 <p:button value="Dashboard"
                           icon="pi pi-home"
-                          outcome="/restrito/app/admin/dashboard_admin.xhtml"/>
+                          outcome="/restrito/app/admin/dashboard.xhtml"/>
 
                 <p:button value="Usuários"
                           icon="pi pi-users"
@@ -81,7 +38,7 @@
 
                 <p:button value="Dashboard"
                           icon="pi pi-home"
-                          outcome="/restrito/app/gerente/dashboard_gerente.xhtml"/>
+                          outcome="/restrito/app/gerente/dashboard.xhtml"/>
 
                 <p:button value="Usuários"
                           icon="pi pi-users"

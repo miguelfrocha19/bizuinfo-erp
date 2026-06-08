@@ -7,40 +7,8 @@
 <h:head>
 
     <title>Meu Perfil</title>
-
-    <style>
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-        }
-
-        .topbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-
-            background: white;
-            border-bottom: 1px solid #ddd;
-
-            padding: 12px;
-
-            display: flex;
-            align-items: center;
-        }
-
-        .spacer {
-            flex: 1;
-        }
-
-        .perfil-container {
-            max-width: 700px;
-            margin: 30px auto;
-        }
-
-    </style>
+    <h:outputStylesheet library="css" name="global.css"/>
+    <h:outputStylesheet library="css" name="perfil.css"/>
 
 </h:head>
 
@@ -77,7 +45,9 @@
                     <i class="pi pi-user"
                        style="font-size:90px;color:#666"></i>
 
-                    <h2>Seu Perfil</h2>
+                    <h2>
+                        <h:outputText value="#{perfilBean.usuario.nome}" />
+                    </h2>
 
                 </div>
 

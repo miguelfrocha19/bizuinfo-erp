@@ -5,58 +5,29 @@
 
 <h:head>
 
-    <title>Dashboard Gerente - BizuInfo</title>
-
-    <h:outputStylesheet library="css" name="estilo.css"/>
-
-    <style>
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .topbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-
-            background: #fff;
-            padding: 12px;
-
-            border-bottom: 1px solid #ddd;
-
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .spacer {
-            flex: 1;
-        }
-
-        .content-area {
-            padding: 15px;
-        }
-
-    </style>
+    <title>Dashboard Admin - BizuInfo</title>
+    <h:outputStylesheet library="css" name="global.css"/>
+    <h:outputStylesheet library="css" name="usuarios.css"/>
 
 </h:head>
 
 <h:body>
 
-    <h:form>
+    <h:form id="formDashboard">
 
         <div class="topbar">
 
             <p:button value="Dashboard"
                       icon="pi pi-home"
-                      outcome="/restrito/app/gerente/dashboard_gerente.xhtml"/>
+                      outcome="/restrito/app/admin/dashboard.xhtml"/>
 
             <p:button value="Usuários"
                       icon="pi pi-users"
-                      outcome="/restrito/app/gerente/usuarios.xhtml"/>
+                      outcome="/restrito/app/admin/usuarios.xhtml"/>
+
+            <p:button value="Logs"
+                      icon="pi pi-book"
+                      outcome="/restrito/app/admin/logs.xhtml"/>
 
             <p:menuButton value="Produtos"
                           icon="pi pi-box">
