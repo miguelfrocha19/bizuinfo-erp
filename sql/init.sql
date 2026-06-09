@@ -8,32 +8,35 @@ SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS usuario
 (
-    id                INT AUTO_INCREMENT PRIMARY KEY,
+    id                BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome              VARCHAR(100)                             NOT NULL,
     email             VARCHAR(100)                             NOT NULL UNIQUE,
     senha             VARCHAR(255)                             NOT NULL,
     role              ENUM ('FUNCIONARIO', 'GERENTE', 'ADMIN') NOT NULL DEFAULT 'FUNCIONARIO',
     email_verificado  BOOLEAN                                  NOT NULL DEFAULT FALSE,
-    token_verificacao VARCHAR(255)                             NULL,
-    token_reset       VARCHAR(255)                             NULL,
-    token_expiracao   DATETIME                                 NULL
+    token_verificacao VARCHAR(255),
+    token_reset       VARCHAR(255),
+    token_expiracao   DATETIME
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS tipousuario
 (
-    idtipoUsuario INT AUTO_INCREMENT PRIMARY KEY,
-    descricao     VARCHAR(45) NULL,
-    usuario_id    INT         NOT NULL,
-    CONSTRAINT fk_tipousuario_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+    idtipoUsuario BIGINT AUTO_INCREMENT PRIMARY KEY,
+    descricao     VARCHAR(45),
+    usuario_id    BIGINT NOT NULL,
+
+    CONSTRAINT fk_tipousuario_usuario
+        FOREIGN KEY (usuario_id)
+            REFERENCES usuario (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS categoria
 (
-    categoria_id INT AUTO_INCREMENT PRIMARY KEY,
+    categoria_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome         VARCHAR(255) NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -41,50 +44,71 @@ CREATE TABLE IF NOT EXISTS categoria
 
 CREATE TABLE IF NOT EXISTS fornecedor
 (
-    idfornecedor INT AUTO_INCREMENT PRIMARY KEY,
-    nome         VARCHAR(45) NULL
+    idfornecedor BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome         VARCHAR(45)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS produto
 (
-    idproduto               INT AUTO_INCREMENT PRIMARY KEY,
-    nome                    VARCHAR(45) NULL,
-    preco                   DOUBLE      NULL,
-    estoqueAtual            INT         NULL,
-    estoqueMinimo           INT DEFAULT 5, -- NOVA COLUNA
-    descricao               VARCHAR(45) NULL,
-    fornecedor_idfornecedor INT         NOT NULL,
-    categoria_categoria_id  INT         NULL,
-    CONSTRAINT fk_produto_fornecedor FOREIGN KEY (fornecedor_idfornecedor) REFERENCES fornecedor (idfornecedor),
-    CONSTRAINT fk_produto_categoria FOREIGN KEY (categoria_categoria_id) REFERENCES categoria (categoria_id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;;
+    idproduto               BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-CREATE TABLE IF NOT EXISTS compra
-(
-    idcompra   INT AUTO_INCREMENT PRIMARY KEY,
-    dataCompra DATE   NULL,
-    valorTotal DOUBLE NULL,
-    usuario_id INT    NOT NULL,
-    CONSTRAINT fk_compra_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+    nome                    VARCHAR(45),
+    preco                   DOUBLE,
+    estoqueAtual            INT,
+    estoqueMinimo           INT DEFAULT 5,
+    descricao               VARCHAR(45),
+
+    fornecedor_idfornecedor BIGINT,
+    categoria_categoria_id  BIGINT,
+
+    CONSTRAINT fk_produto_fornecedor
+        FOREIGN KEY (fornecedor_idfornecedor)
+            REFERENCES fornecedor (idfornecedor),
+
+    CONSTRAINT fk_produto_categoria
+        FOREIGN KEY (categoria_categoria_id)
+            REFERENCES categoria (categoria_id)
+            ON DELETE SET NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS compra
+(
+    idcompra   BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    dataCompra DATE,
+    valorTotal DOUBLE,
+
+    usuario_id BIGINT NOT NULL,
+
+    CONSTRAINT fk_compra_usuario
+        FOREIGN KEY (usuario_id)
+            REFERENCES usuario (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS itemcompra
 (
-    iditemCompra      INT AUTO_INCREMENT PRIMARY KEY,
-    quantidade        INT         NULL,
-    valorItem         DOUBLE      NULL,
-    itemCompracol     VARCHAR(45) NULL,
-    compra_idcompra   INT         NOT NULL,
-    produto_idproduto INT         NOT NULL,
-    CONSTRAINT fk_itemcompra_compra FOREIGN KEY (compra_idcompra) REFERENCES compra (idcompra),
-    CONSTRAINT fk_itemcompra_produto FOREIGN KEY (produto_idproduto) REFERENCES produto (idproduto)
+    iditemCompra      BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    quantidade        INT,
+    valorItem         DOUBLE,
+    itemCompracol     VARCHAR(45),
+
+    compra_idcompra   BIGINT NOT NULL,
+    produto_idproduto BIGINT NOT NULL,
+
+    CONSTRAINT fk_itemcompra_compra
+        FOREIGN KEY (compra_idcompra)
+            REFERENCES compra (idcompra),
+
+    CONSTRAINT fk_itemcompra_produto
+        FOREIGN KEY (produto_idproduto)
+            REFERENCES produto (idproduto)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
@@ -96,21 +120,35 @@ CREATE TABLE IF NOT EXISTS log_auditoria
     detalhe             TEXT,
     data_hora           DATETIME     NOT NULL,
     usuario_responsavel VARCHAR(100),
-    ip_origem VARCHAR (100)
+    ip_origem           VARCHAR(100)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
 INSERT INTO usuario (nome, email, senha, role, email_verificado)
-VALUES ('Joao Paulo', 'bizuinfo.contato@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
+VALUES ('Joao Paulo', 'bizuinfo.contato@gmail.com',
+        '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
         'ADMIN', TRUE),
-       ('Miguel Fernandes', 'miguel.rspp@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
+
+       ('Miguel Fernandes', 'miguel.rspp@gmail.com',
+        '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
         'FUNCIONARIO', TRUE),
-       ('Nicolas Caseiro', 'nickcda@gmail.com', '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
+
+       ('Nicolas Caseiro', 'nickcda@gmail.com',
+        '$2a$12$7RBVdohjJCyADskdJTDmmOa6MOUNcOBrNH3..AS/SZAwoUpNFU086',
         'GERENTE', TRUE),
-       ('Apagar', 'davi.colosso50@gmail.com', '', 'FUNCIONARIO', TRUE),
-       ('Apagar2', 'miguel.control19@gmail.com', '', 'FUNCIONARIO', FALSE),
-       ('Teste', 'teste@gmail.com', '$2a$10$z/eXQYdYSLo7R4NVNPwZ9uFvDNn/bM2P9ulTgYP3MaGyPrCwDvRQ.', 'ADMIN', TRUE);
+
+       ('Apagar', 'davi.colosso50@gmail.com',
+        '',
+        'FUNCIONARIO', TRUE),
+
+       ('Apagar2', 'miguel.control19@gmail.com',
+        '',
+        'FUNCIONARIO', FALSE),
+
+       ('Teste', 'teste@gmail.com',
+        '$2a$10$z/eXQYdYSLo7R4NVNPwZ9uFvDNn/bM2P9ulTgYP3MaGyPrCwDvRQ.',
+        'ADMIN', TRUE);
 
 INSERT INTO tipousuario (descricao, usuario_id)
 VALUES ('Acesso Total', 1),
@@ -134,8 +172,14 @@ VALUES ('Logitech'),
        ('ASUS'),
        ('LG');
 
-INSERT INTO produto (nome, preco, estoqueAtual, estoqueMinimo, descricao, fornecedor_idfornecedor,
-                     categoria_categoria_id)
+INSERT INTO produto
+(nome,
+ preco,
+ estoqueAtual,
+ estoqueMinimo,
+ descricao,
+ fornecedor_idfornecedor,
+ categoria_categoria_id)
 VALUES ('Teclado Mecânico RGB', 450.50, 25, 2, 'Switch Blue TKL', 2, 1),
        ('Mouse Gamer Sem Fio', 320.00, 40, 5, '10000 DPI Bateria 50h', 1, 1),
        ('Placa de Vídeo RTX 4060', 2150.00, 10, 1, '8GB GDDR6 Dual Fan', 3, 2),
@@ -156,24 +200,24 @@ VALUES ('2026-05-10', 770.50, 2),
        ('2026-05-15', 2150.00, 1),
        ('2026-05-18', 480.89, 3);
 
-INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto)
+INSERT INTO itemcompra
+(quantidade,
+ valorItem,
+ itemCompracol,
+ compra_idcompra,
+ produto_idproduto)
 VALUES (1, 450.50, 'Separado', 1, 1),
-       (1, 320.00, 'Separado', 1, 2);
-
-INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto)
-VALUES (1, 2150.00, 'Enviado', 2, 3);
-
-INSERT INTO itemcompra (quantidade, valorItem, itemCompracol, compra_idcompra, produto_idproduto)
-VALUES (1, 280.90, 'Processando', 3, 4),
+       (1, 320.00, 'Separado', 1, 2),
+       (1, 2150.00, 'Enviado', 2, 3),
+       (1, 280.90, 'Processando', 3, 4),
        (1, 199.99, 'Processando', 3, 5);
 
-
-
 SET GLOBAL event_scheduler = ON;
+
 DELIMITER $$
+
 CREATE EVENT IF NOT EXISTS limpar_usuarios_pendentes
     ON SCHEDULE EVERY 24 HOUR
-    COMMENT 'Remove usuários que não confirmaram email'
     DO
     BEGIN
         DELETE
@@ -182,4 +226,5 @@ CREATE EVENT IF NOT EXISTS limpar_usuarios_pendentes
           AND token_expiracao IS NOT NULL
           AND token_expiracao < NOW();
     END$$
+
 DELIMITER ;
