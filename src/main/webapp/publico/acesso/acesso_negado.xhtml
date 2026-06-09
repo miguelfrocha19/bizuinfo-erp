@@ -28,10 +28,10 @@
                         value="Voltar para Dashboard"
                         icon="pi pi-arrow-left"
                         outcome="#{sessionScope.usuario.role eq 'ADMIN'
-                        ? '/restrito/app/admin/dashboard'
+                        ? '/restrito/dashboard/dashboard_admin'
                         : sessionScope.usuario.role eq 'GERENTE'
-                        ? '/restrito/app/gerente/dashboard'
-                        : '/restrito/app/funcionario/dashboard'}"
+                        ? '/restrito/dashboard/dashboard_gerente'
+                        : '/restrito/dashboard/dashboard_funcionario'}"
                         styleClass="full-width p-mt-2" />
 
             </h:panelGrid>
