@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS compra
 (
     idcompra   BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    dataCompra DATE,
+    dataCompra DATETIME,
     valorTotal DOUBLE,
 
     usuario_id BIGINT NOT NULL,
@@ -109,6 +109,62 @@ CREATE TABLE IF NOT EXISTS itemcompra
     CONSTRAINT fk_itemcompra_produto
         FOREIGN KEY (produto_idproduto)
             REFERENCES produto (idproduto)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS venda
+(
+    idvenda BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    dataVenda DATETIME NOT NULL,
+    valorTotal DOUBLE NOT NULL,
+
+    usuario_id BIGINT NOT NULL,
+
+    CONSTRAINT fk_venda_usuario
+        FOREIGN KEY (usuario_id)
+            REFERENCES usuario (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS itemvenda
+(
+    iditemVenda BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    quantidade INT NOT NULL,
+    valorUnitario DOUBLE NOT NULL,
+    subtotal DOUBLE NOT NULL,
+
+    venda_idvenda BIGINT NOT NULL,
+    produto_idproduto BIGINT NOT NULL,
+
+    CONSTRAINT fk_itemvenda_venda
+        FOREIGN KEY (venda_idvenda)
+            REFERENCES venda (idvenda),
+
+    CONSTRAINT fk_itemvenda_produto
+        FOREIGN KEY (produto_idproduto)
+            REFERENCES produto (idproduto)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS pagamento
+(
+    idpagamento BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    valor DOUBLE NOT NULL,
+
+    formaPagamento VARCHAR(30) NOT NULL,
+    statusPagamento VARCHAR(30) NOT NULL,
+
+    venda_idvenda BIGINT NOT NULL,
+
+    CONSTRAINT fk_pagamento_venda
+        FOREIGN KEY (venda_idvenda)
+            REFERENCES venda (idvenda)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;

@@ -3,6 +3,7 @@ package com.bizuinfo.produto.service;
 import com.bizuinfo.infra.service.EmailService;
 import com.bizuinfo.produto.dao.ProdutoDAO;
 import com.bizuinfo.produto.model.Produto;
+import com.bizuinfo.usuario.service.LogAuditoriaService;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -14,6 +15,9 @@ public class EstoqueService {
 
     @Inject
     private ProdutoDAO produtoDAO;
+
+    @EJB
+    private LogAuditoriaService logAuditoriaService;
 
     @EJB
     private EmailService emailService;
@@ -33,6 +37,13 @@ public class EstoqueService {
 
             produto.setEstoqueAtual(novoEstoque);
             produtoDAO.salvar(produto);
+
+            logAuditoriaService.registrar(
+                    "MOVIMENTACAO_ESTOQUE",
+                    "Produto " + produto.getNome() +
+                            " novo estoque: " + produto.getEstoqueAtual(),
+                    "SYSTEM"
+            );
 
             verificarAlerta(produto);
         }

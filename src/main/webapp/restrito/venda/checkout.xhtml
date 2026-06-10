@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Checkout - Venda</title>
+
+    <h:outputStylesheet library="css" name="global.css"/>
+    <h:outputStylesheet library="css" name="produto.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form id="form">
+
+        <!-- TOPBAR SIMPLES -->
+        <div class="topbar">
+
+            <p:button value="Voltar"
+                      icon="pi pi-arrow-left"
+                      outcome="/restrito/venda/consultar_produtos_venda.xhtml"/>
+
+            <div class="spacer"/>
+
+        </div>
+
+        <p:growl id="growl" showDetail="true" life="3000"/>
+
+        <p:panel header="Checkout de Venda">
+        <!-- CARRINHO -->
+        <div class="container-tabela">
+
+            <p:dataTable value="#{carrinhoBean.itens}"
+                         var="item"
+                         emptyMessage="Carrinho vazio">
+
+                <p:column headerText="Produto">
+                    <h:outputText value="#{item.produto.nome}"/>
+                </p:column>
+
+                <p:column headerText="Qtd">
+                    <h:outputText value="#{item.quantidade}"/>
+                </p:column>
+
+                <p:column headerText="Unitário">
+                    <h:outputText value="#{item.valorUnitario}">
+                        <f:convertNumber minFractionDigits="2"
+                                         maxFractionDigits="2"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Subtotal">
+                    <h:outputText value="#{item.subtotal}">
+                        <f:convertNumber minFractionDigits="2"
+                                         maxFractionDigits="2"/>
+                    </h:outputText>
+                </p:column>
+
+            </p:dataTable>
+
+            <h3>
+                Total: R$
+                <h:outputText value="#{carrinhoBean.valorTotal}">
+                    <f:convertNumber minFractionDigits="2"
+                                     maxFractionDigits="2"/>
+                </h:outputText>
+            </h3>
+
+        </div>
+        </p:panel>
+
+        <!-- PAGAMENTO -->
+        <div class="container-tabela">
+
+            <h3>Forma de Pagamento</h3>
+
+            <p:selectOneRadio value="#{checkoutBean.formaPagamento}">
+
+                <f:selectItem itemLabel="PIX" itemValue="PIX"/>
+                <f:selectItem itemLabel="Cartão de Crédito" itemValue="CARTAO_CREDITO"/>
+                <f:selectItem itemLabel="Cartão de Débito" itemValue="CARTAO_DEBITO"/>
+                <f:selectItem itemLabel="Boleto" itemValue="BOLETO"/>
+
+            </p:selectOneRadio>
+
+        </div>
+
+        <div class="container-tabela">
+
+            <p:commandButton value="Finalizar Venda"
+                             icon="pi pi-check"
+                             action="#{checkoutBean.finalizar}"
+                             update=":form:growl"
+                             styleClass="ui-button-success"/>
+
+        </div>
+
+    </h:form>
+
+</h:body>
+</html>

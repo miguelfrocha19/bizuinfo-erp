@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Vendas - Produtos</title>
+
+    <h:outputStylesheet library="css" name="global.css"/>
+    <h:outputStylesheet library="css" name="produto.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form id="form">
+        <!-- TOP BAR -->
+        <div class="topbar">
+
+            <p:button
+                    value="Voltar"
+                    icon="pi pi-arrow-left"
+                    outcome="#{sessionScope.usuario.role eq 'ADMIN'
+                    ? '/restrito/dashboard/dashboard_admin'
+                    : sessionScope.usuario.role eq 'GERENTE'
+                    ? '/restrito/dashboard/dashboard_gerente'
+                    : '/restrito/dashboard/dashboard_funcionario'}"/>
+
+            <div class="spacer"></div>
+
+            <h:outputText value="Itens no carrinho: #{carrinhoBean.quantidadeItens}"/>
+
+            <p:commandButton value="Ir para Checkout"
+                             icon="pi pi-shopping-cart"
+                             action="/restrito/venda/checkout?faces-redirect=true"
+                             styleClass="ui-button-success"/>
+
+        </div>
+
+        <p:growl id="growl" showDetail="true" life="3000"/>
+
+        <p:panel header="Gestão de Vendas - Produtos">
+
+            <!-- PRODUTOS -->
+            <p:dataTable value="#{vendaBean.produtos}"
+                         var="p"
+                         sortMode="multiple">
+
+                <p:column headerText="Produto"
+                          sortBy="#{p.produto.nome}">
+                    <h:outputText value="#{p.produto.nome}"/>
+                </p:column>
+
+                <p:column headerText="Estoque"
+                          sortBy="#{p.produto.estoqueAtual}">
+
+                    <h:outputText value="#{p.produto.estoqueAtual}"
+                                  style="font-weight: bold; color: #{p.estoqueAtual le p.estoqueMinimo ? 'red' : 'green'};"/>
+                </p:column>
+
+                <p:column headerText="Preço"
+                          sortBy="#{p.produto.preco}">
+                    <h:outputText value="#{p.produto.preco}">
+                        <f:convertNumber minFractionDigits="2"
+                                         maxFractionDigits="2"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Quantidade">
+
+                    <p:inputNumber value="#{p.quantidade}"
+                                   minValue="1"
+                                   decimalPlaces="0"
+                                   style="width:90px"/>
+
+                </p:column>
+
+                <p:column headerText="Ação">
+
+                    <p:commandButton value="Adicionar"
+                                     icon="pi pi-plus"
+                                     actionListener="#{vendaBean.adicionarAoCarrinho(p)}"
+                                     update="@form"
+                                     styleClass="ui-button-success"/>
+
+                </p:column>
+
+            </p:dataTable>
+
+        </p:panel>
+
+        <!-- CARRINHO -->
+        <p:panel header="Carrinho de Compras" style="margin-top:20px;">
+
+            <p:dataTable value="#{carrinhoBean.itens}"
+                         var="item"
+                         emptyMessage="Carrinho vazio"
+                         responsiveLayout="scroll">
+
+                <p:column headerText="Produto">
+                    <h:outputText value="#{item.produto.nome}"/>
+                </p:column>
+
+                <p:column headerText="Qtd">
+                    <h:outputText value="#{item.quantidade}"/>
+                </p:column>
+
+                <p:column headerText="Unitário">
+                    <h:outputText value="#{item.valorUnitario}">
+                        <f:convertNumber minFractionDigits="2"
+                                         maxFractionDigits="2"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Subtotal">
+                    <h:outputText value="#{item.subtotal}">
+                        <f:convertNumber minFractionDigits="2"
+                                         maxFractionDigits="2"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Ações">
+
+                    <p:commandButton value="Remover 1"
+                                     icon="pi pi-minus"
+                                     actionListener="#{carrinhoBean.removerItem(item)}"
+                                     update="@form"
+                                     styleClass="ui-button-warning"/>
+
+                </p:column>
+
+            </p:dataTable>
+
+            <!-- TOTAL -->
+            <h3 style="margin-top:15px;">
+                Total: R$
+                <h:outputText value="#{carrinhoBean.valorTotal}">
+                    <f:convertNumber minFractionDigits="2"
+                                     maxFractionDigits="2"/>
+                </h:outputText>
+            </h3>
+
+            <!-- AÇÕES DO CARRINHO -->
+            <div style="margin-top:15px; display:flex; gap:10px;">
+
+                <p:commandButton value="Limpar Carrinho"
+                                 icon="pi pi-trash"
+                                 actionListener="#{carrinhoBean.limparCarrinho}"
+                                 update="@form"
+                                 styleClass="ui-button-danger"
+                                 disabled="#{carrinhoBean.carrinhoVazio}"/>
+
+                <p:button value="Ir para Checkout"
+                          icon="pi pi-credit-card"
+                          outcome="/restrito/venda/checkout"
+                          styleClass="ui-button-success"
+                          disabled="#{carrinhoBean.carrinhoVazio}"/>
+
+            </div>
+
+        </p:panel>
+
+    </h:form>
+
+</h:body>
+</html>
