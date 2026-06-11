@@ -6,6 +6,9 @@ import com.bizuinfo.venda.model.Venda;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -110,6 +113,31 @@ public class VendaDAO extends GenericoDAO<Venda> {
             LEFT JOIN FETCH v.usuario
             ORDER BY v.dataVenda DESC
         """, Venda.class).getResultList();
+
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Venda> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+
+        EntityManager em = JPAutil.getEntityManager();
+
+        try {
+
+            return em.createQuery("""
+            SELECT DISTINCT v
+            FROM Venda v
+            LEFT JOIN FETCH v.itens i
+            LEFT JOIN FETCH i.produto
+            LEFT JOIN FETCH v.pagamento
+            LEFT JOIN FETCH v.usuario
+            WHERE v.dataVenda BETWEEN :inicio AND :fim
+            ORDER BY v.dataVenda DESC
+        """, Venda.class)
+                    .setParameter("inicio", inicio)
+                    .setParameter("fim", fim)
+                    .getResultList();
 
         } finally {
             em.close();
