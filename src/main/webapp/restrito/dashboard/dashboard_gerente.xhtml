@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
@@ -68,16 +69,61 @@
 
             <p:panel header="Resumo Geral">
 
-                <h:panelGrid columns="1" cellpadding="8">
+                <!-- CARDS -->
+                <h:panelGrid columns="3" cellpadding="10" styleClass="kpi-grid">
 
-                    <h:outputText value="Bem-vindo, #{loginBean.usuarioLogado.nome}"
-                                  style="font-size:18px;font-weight:bold"/>
+                    <p:panel header="Hoje" styleClass="kpi-card kpi-blue">
+                        <h:outputText value="#{dashboardBean.faturamentoHoje}">
+                            <f:convertNumber type="currency"
+                                             currencySymbol="R$"
+                                             maxFractionDigits="2"
+                                             minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:panel>
 
-                    <h:outputText value="Email: #{loginBean.usuarioLogado.email}"/>
+                    <p:panel header="Semana" styleClass="kpi-card kpi-green">
+                        <h:outputText value="#{dashboardBean.faturamentoSemana}">
+                            <f:convertNumber type="currency"
+                                             currencySymbol="R$"
+                                             maxFractionDigits="2"
+                                             minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:panel>
 
-                    <h:outputText value="Perfil: #{loginBean.usuarioLogado.role}"/>
+                    <p:panel header="Mês" styleClass="kpi-card kpi-purple">
+                        <h:outputText value="#{dashboardBean.faturamentoMes}">
+                            <f:convertNumber type="currency"
+                                             currencySymbol="R$"
+                                             maxFractionDigits="2"
+                                             minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:panel>
 
                 </h:panelGrid>
+
+                <br/>
+
+                <!-- GRÁFICO PAGAMENTO -->
+                <p:panel header="Valor Total por Forma de Pagamento">
+
+                    <div style="width:500px;margin:auto;">
+
+                        <p:pieChart model="#{dashboardBean.pagamentoChart}"
+                                    width="500"
+                                    height="500"/>
+
+                    </div>
+
+                </p:panel>
+
+                <br/>
+
+                <!-- GRÁFICO PRODUTOS -->
+                <p:panel header="Produtos mais vendidos">
+
+                    <p:barChart model="#{dashboardBean.produtosChart}" style="width:100%;height:300px"/>
+
+                </p:panel>
 
             </p:panel>
 

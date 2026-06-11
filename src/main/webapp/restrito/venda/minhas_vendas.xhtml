@@ -19,7 +19,11 @@
 
             <p:button value="Dashboard"
                       icon="pi pi-home"
-                      outcome="#{sessaoBean.dashboard}"/>
+                      outcome="#{sessionScope.usuario.role eq 'ADMIN'
+                      ? '/restrito/dashboard/dashboard_admin'
+                      : sessionScope.usuario.role eq 'GERENTE'
+                      ? '/restrito/dashboard/dashboard_gerente'
+                      : '/restrito/dashboard/dashboard_funcionario'}"/>
 
             <p:menuButton value="Vendas"
                           icon="pi pi-shopping-cart">
@@ -42,15 +46,63 @@
                             outcome="/restrito/usuario/perfil_usuario.xhtml"/>
 
                 <p:menuitem value="Sair"
+                            icon="pi pi-sign-out"
                             action="#{loginBean.sair}"/>
 
             </p:menuButton>
 
         </div>
 
+        <p:panel header="Relatório de Vendas - Filtros">
+
+            <h:panelGrid columns="6" cellpadding="5">
+
+                <p:outputLabel value="Data Inicial"/>
+                <p:datePicker value="#{minhasVendasBean.dataInicial}"
+                              pattern="dd/MM/yyyy"
+                              showIcon="true"/>
+
+                <p:outputLabel value="Data Final"/>
+                <p:datePicker value="#{minhasVendasBean.dataFinal}"
+                              pattern="dd/MM/yyyy"
+                              showIcon="true"/>
+
+                <p:commandButton value="Filtrar"
+                                 icon="pi pi-search"
+                                 action="#{minhasVendasBean.filtrar}"
+                                 update="form"/>
+
+                <p:commandButton value="Limpar"
+                                 icon="pi pi-times"
+                                 action="#{minhasVendasBean.carregar}"
+                                 update="form"/>
+
+            </h:panelGrid>
+
+        </p:panel>
+
+        <p:panel header="Exportação">
+
+            <h:panelGrid columns="2" cellpadding="5">
+
+                <p:commandButton value="Exportar PDF"
+                                 icon="pi pi-file-pdf"
+                                 ajax="false"
+                                 action="#{minhasVendasBean.exportarPDF}"/>
+
+                <p:commandButton value="Exportar CSV"
+                                 icon="pi pi-file-excel"
+                                 ajax="false"
+                                 action="#{minhasVendasBean.exportarCSV}"/>
+
+            </h:panelGrid>
+
+        </p:panel>
+
         <p:panel header="Histórico de Vendas">
 
-            <p:dataTable value="#{minhasVendasBean.vendas}"
+            <p:dataTable id="tabelaVendas"
+                         value="#{minhasVendasBean.vendas}"
                          var="v"
                          emptyMessage="Nenhuma venda encontrada">
 
@@ -83,6 +135,7 @@
                     <p:button value="Ver Recibo"
                               icon="pi pi-eye"
                               outcome="/restrito/venda/recibo_venda.xhtml">
+
                         <f:param name="vendaId" value="#{v.id}"/>
                     </p:button>
 

@@ -28,7 +28,13 @@ public final class Permissoes {
             Map.entry(Paginas.CONSULTAR_ESTOQUE, Role.FUNCIONARIO),
             Map.entry(Paginas.GERENCIAR_ESTOQUE, Role.GERENTE),
             Map.entry(Paginas.GERENCIAR_CATEGORIAS, Role.GERENTE),
-            Map.entry(Paginas.DETALHES_PRODUTO, Role.FUNCIONARIO)
+            Map.entry(Paginas.DETALHES_PRODUTO, Role.FUNCIONARIO),
+
+            // Vendas
+            Map.entry(Paginas.CONSULTAR_PRODUTOS_VENDA, Role.FUNCIONARIO),
+            Map.entry(Paginas.CHECKOUT, Role.FUNCIONARIO),
+            Map.entry(Paginas.MINHAS_VENDAS, Role.FUNCIONARIO),
+            Map.entry(Paginas.RECIBO_VENDA, Role.FUNCIONARIO)
     );
 
     public static Role obterPermissao(String pagina) {

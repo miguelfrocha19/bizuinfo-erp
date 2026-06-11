@@ -1,5 +1,8 @@
 package com.bizuinfo.venda.bean;
 
+import com.bizuinfo.acesso.bean.SessaoBean;
+import com.bizuinfo.usuario.model.Usuario;
+import com.bizuinfo.usuario.model.Role;
 import com.bizuinfo.venda.dao.VendaDAO;
 import com.bizuinfo.venda.model.Venda;
 import com.bizuinfo.venda.service.VendaPDFService;
@@ -25,6 +28,9 @@ public class ReciboVendaBean implements Serializable {
     @Inject
     private VendaDAO vendaDAO;
 
+    @Inject
+    private SessaoBean sessaoBean;
+
     @EJB
     private VendaService vendaService;
 
@@ -44,8 +50,20 @@ public class ReciboVendaBean implements Serializable {
 
             Long vendaId = Long.parseLong(params.get("vendaId"));
 
-            this.venda = vendaDAO.buscarCompletamente(vendaId)
+            Venda vendaCarregada = vendaDAO.buscarCompletamente(vendaId)
                     .orElseThrow(() -> new RuntimeException("Venda não encontrada"));
+
+            Usuario usuario = sessaoBean.getUsuarioLogado();
+
+            boolean podeVer =
+                    usuario.getRole().temPermissao(Role.GERENTE)
+                            || vendaCarregada.getUsuario().getId().equals(usuario.getId());
+
+            if (!podeVer) {
+                throw new RuntimeException("Acesso negado.");
+            }
+
+            this.venda = vendaCarregada;
 
         } catch (Exception e) {
             e.printStackTrace();

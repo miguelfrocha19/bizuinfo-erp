@@ -38,6 +38,14 @@ public class CheckoutBean implements Serializable {
 
     private Venda vendaFinalizada;
 
+    private boolean pixGerado;
+
+    private String chavePix;
+
+    private String codigoPix;
+
+    private String qrCodePix;
+
     public String finalizar() {
 
         try {
@@ -48,6 +56,10 @@ public class CheckoutBean implements Serializable {
 
             if (formaPagamento == null) {
                 throw new RuntimeException("Selecione uma forma de pagamento.");
+            }
+
+            if (formaPagamento == FormaPagamento.PIX && !pixGerado) {
+                throw new RuntimeException("Gere o código PIX antes de finalizar.");
             }
 
             Usuario usuario = sessaoBean.getUsuarioLogado();
@@ -112,9 +124,44 @@ public class CheckoutBean implements Serializable {
         }
     }
 
+    public void gerarPix() {
+
+        chavePix = "pix@bizuinfo.com.br";
+
+        codigoPix = java.util.UUID.randomUUID()
+                .toString()
+                .replace("-", "")
+                .substring(0, 24)
+                .toUpperCase();
+
+        qrCodePix =
+                "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
+                        + codigoPix;
+
+        pixGerado = true;
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(
+                        FacesMessage.SEVERITY_INFO,
+                        "PIX gerado",
+                        "Simulação PIX pronta para pagamento."
+                )
+        );
+    }
+
     public FormaPagamento getFormaPagamento() {  return formaPagamento;  }
 
     public void setFormaPagamento(FormaPagamento formaPagamento) {  this.formaPagamento = formaPagamento;  }
 
     public Venda getVendaFinalizada() {  return vendaFinalizada;  }
+
+    public boolean isPixGerado() {  return pixGerado;  }
+
+    public String getChavePix() {  return chavePix;  }
+
+    public String getCodigoPix() {  return codigoPix;  }
+
+    public String getQrCodePix() {  return qrCodePix;  }
+
 }

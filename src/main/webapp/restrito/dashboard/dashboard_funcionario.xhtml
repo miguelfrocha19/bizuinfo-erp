@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
@@ -18,11 +19,10 @@
         <div class="topbar">
 
             <p:button value="Dashboard"
-                             icon="pi pi-home"
-                             outcome="/restrito/dashboard/dashboard_funcionario.xhtml"/>
+                      icon="pi pi-home"
+                      outcome="/restrito/dashboard/dashboard_funcionario.xhtml"/>
 
-            <p:menuButton value="Vendas"
-                          icon="pi pi-shopping-cart">
+            <p:menuButton value="Vendas" icon="pi pi-shopping-cart">
 
                 <p:menuitem value="Nova Venda"
                             icon="pi pi-plus"
@@ -34,7 +34,7 @@
 
             </p:menuButton>
 
-            <div class="spacer"> </div>
+            <div class="spacer"></div>
 
             <p:menuButton icon="pi pi-user">
 
@@ -42,34 +42,50 @@
                             outcome="/restrito/usuario/perfil_usuario.xhtml"/>
 
                 <p:menuitem value="Sair"
-                            icon="pi pi-sign-out"
                             action="#{loginBean.sair}"/>
 
             </p:menuButton>
 
         </div>
 
-        <p:outputPanel styleClass="content-area">
+        <div class="content-area">
 
-            <p:panel header="Resumo Geral">
+            <p:panel header="Resumo das minhas vendas">
 
-                <h:panelGrid columns="1" cellpadding="8">
+                <h:panelGrid columns="3" cellpadding="10" styleClass="kpi-grid">
 
-                    <h:outputText
-                            value="Bem-vindo, #{loginBean.usuarioLogado.nome}"
-                            style="font-size:18px;font-weight:bold"/>
+                    <p:panel header="Hoje" styleClass="kpi-card kpi-blue">
+                        <h:outputText value="#{dashboardBean.faturamentoHoje}">
+                            <f:convertNumber type="currency"
+                                             currencySymbol="R$"
+                                             maxFractionDigits="2"
+                                             minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:panel>
 
-                    <h:outputText
-                            value="Email: #{loginBean.usuarioLogado.email}"/>
+                    <p:panel header="Semana" styleClass="kpi-card kpi-green">
+                        <h:outputText value="#{dashboardBean.faturamentoSemana}">
+                            <f:convertNumber type="currency"
+                                             currencySymbol="R$"
+                                             maxFractionDigits="2"
+                                             minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:panel>
 
-                    <h:outputText
-                            value="Perfil: #{loginBean.usuarioLogado.role}"/>
+                    <p:panel header="Mês" styleClass="kpi-card kpi-purple">
+                        <h:outputText value="#{dashboardBean.faturamentoMes}">
+                            <f:convertNumber type="currency"
+                                             currencySymbol="R$"
+                                             maxFractionDigits="2"
+                                             minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:panel>
 
                 </h:panelGrid>
 
             </p:panel>
 
-        </p:outputPanel>
+        </div>
 
     </h:form>
 

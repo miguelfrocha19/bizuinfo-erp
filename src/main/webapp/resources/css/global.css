@@ -22,3 +22,27 @@ html, body {
 .spacer {
     flex: 1;
 }
+
+.kpi-grid {
+    margin-bottom: 20px;
+}
+
+.kpi-card {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    color: white;
+}
+
+.kpi-blue {
+    background: linear-gradient(135deg, #2196F3, #64B5F6);
+}
+
+.kpi-green {
+    background: linear-gradient(135deg, #4CAF50, #81C784);
+}
+
+.kpi-purple {
+    background: linear-gradient(135deg, #9C27B0, #BA68C8);
+}

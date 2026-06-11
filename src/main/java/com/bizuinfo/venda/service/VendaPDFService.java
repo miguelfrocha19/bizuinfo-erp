@@ -5,6 +5,11 @@ import com.bizuinfo.venda.model.ItemVenda;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+
 import jakarta.ejb.Stateless;
 
 import java.io.ByteArrayOutputStream;
@@ -151,6 +156,71 @@ public class VendaPDFService {
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao gerar PDF da venda", e);
+        }
+    }
+
+    public byte[] gerarRelatorioVendas(List<Venda> vendas) {
+
+        try {
+
+            Document document = new Document(PageSize.A4);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font titleFont = new Font(Font.HELVETICA, 16, Font.BOLD);
+            Paragraph title = new Paragraph("RELATÓRIO DE VENDAS", titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(4);
+            table.setWidthPercentage(100);
+
+            addHeader(table, "Data");
+            addHeader(table, "Usuário");
+            addHeader(table, "Forma Pagamento");
+            addHeader(table, "Total");
+
+            double totalGeral = 0;
+
+            for (Venda v : vendas) {
+
+                table.addCell(v.getDataVendaFormatada());
+                table.addCell(v.getUsuario().getNome());
+                table.addCell(
+                        v.getPagamento() != null
+                                ? v.getPagamento().getFormaPagamento().name()
+                                : "-"
+                );
+
+                table.addCell(String.format("R$ %.2f", v.getValorTotal()));
+
+                totalGeral += v.getValorTotal();
+            }
+
+            document.add(table);
+
+            document.add(new Paragraph(" "));
+
+            Font totalFont = new Font(Font.HELVETICA, 14, Font.BOLD);
+
+            Paragraph total = new Paragraph(
+                    "TOTAL GERAL: R$ " + String.format("%.2f", totalGeral),
+                    totalFont
+            );
+
+            total.setAlignment(Element.ALIGN_RIGHT);
+            document.add(total);
+
+            document.close();
+
+            return out.toByteArray();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar relatório de vendas", e);
         }
     }
 

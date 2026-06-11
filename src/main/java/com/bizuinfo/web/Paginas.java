@@ -15,6 +15,7 @@ public class Paginas {
     private static final String ESTOQUE   = "estoque/";
     private static final String AUDITORIA = "auditoria/";
     private static final String DASHBOARD = "dashboard/";
+    private static final String VENDA = "venda/";
 
 
     // público                 NOME                         ACESSO    MÓDULO   PÁGINA
@@ -27,18 +28,21 @@ public class Paginas {
     public static final String CONSUMIR_TOKEN_RECUPERACAO = PUBLICO + ACESSO + "consumir_token_recuperacao.xhtml";
 
 
-    // restrito                NOME                    ACESSO     MÓDULO      PÁGINA
-    public static final String LOGS_AUDITORIA        = RESTRITO + AUDITORIA + "logs.xhtml";
-    public static final String DASHBOARD_ADMIN       = RESTRITO + DASHBOARD + "dashboard_admin.xhtml";
-    public static final String DASHBOARD_FUNCIONARIO = RESTRITO + DASHBOARD + "dashboard_funcionario.xhtml";
-    public static final String DASHBOARD_GERENTE     = RESTRITO + DASHBOARD + "dashboard_gerente.xhtml";
-    public static final String DETALHES_PRODUTO      = RESTRITO + PRODUTO   + "detalhes_produto.xhtml";
-    public static final String GERENCIAR_CATEGORIAS  = RESTRITO + PRODUTO   + "gerenciar_categorias.xhtml";
-    public static final String CONSULTAR_ESTOQUE     = RESTRITO + ESTOQUE   + "consultar_estoque.xhtml";
-    public static final String GERENCIAR_ESTOQUE     = RESTRITO + ESTOQUE   + "gerenciar_estoque.xhtml";
-    public static final String PERFIL_USUARIO        = RESTRITO + USUARIO   + "perfil_usuario.xhtml";
-    public static final String USUARIOS_ADMIN        = RESTRITO + USUARIO   + "usuarios_admin.xhtml";
-    public static final String USUARIOS_GERENTE      = RESTRITO + USUARIO   + "usuarios_gerente.xhtml";
-
+    // restrito                NOME                        ACESSO     MÓDULO      PÁGINA
+    public static final String LOGS_AUDITORIA           = RESTRITO + AUDITORIA + "logs.xhtml";
+    public static final String DASHBOARD_ADMIN          = RESTRITO + DASHBOARD + "dashboard_admin.xhtml";
+    public static final String DASHBOARD_FUNCIONARIO    = RESTRITO + DASHBOARD + "dashboard_funcionario.xhtml";
+    public static final String DASHBOARD_GERENTE        = RESTRITO + DASHBOARD + "dashboard_gerente.xhtml";
+    public static final String DETALHES_PRODUTO         = RESTRITO + PRODUTO   + "detalhes_produto.xhtml";
+    public static final String GERENCIAR_CATEGORIAS     = RESTRITO + PRODUTO   + "gerenciar_categorias.xhtml";
+    public static final String CONSULTAR_ESTOQUE        = RESTRITO + ESTOQUE   + "consultar_estoque.xhtml";
+    public static final String GERENCIAR_ESTOQUE        = RESTRITO + ESTOQUE   + "gerenciar_estoque.xhtml";
+    public static final String PERFIL_USUARIO           = RESTRITO + USUARIO   + "perfil_usuario.xhtml";
+    public static final String USUARIOS_ADMIN           = RESTRITO + USUARIO   + "usuarios_admin.xhtml";
+    public static final String USUARIOS_GERENTE         = RESTRITO + USUARIO   + "usuarios_gerente.xhtml";
+    public static final String CONSULTAR_PRODUTOS_VENDA = RESTRITO + VENDA     + "consultar_produtos_venda.xhtml";
+    public static final String CHECKOUT                 = RESTRITO + VENDA     + "checkout.xhtml";
+    public static final String MINHAS_VENDAS            = RESTRITO + VENDA     + "minhas_vendas.xhtml";
+    public static final String RECIBO_VENDA             = RESTRITO + VENDA     + "recibo_venda.xhtml";
 
 }
