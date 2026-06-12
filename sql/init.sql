@@ -45,7 +45,11 @@ CREATE TABLE IF NOT EXISTS categoria
 CREATE TABLE IF NOT EXISTS fornecedor
 (
     idfornecedor BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nome         VARCHAR(45)
+    nome         VARCHAR(45),
+    cnpj         VARCHAR(20),
+    telefone     VARCHAR(20),
+    email        VARCHAR(100)
+
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
@@ -71,44 +75,6 @@ CREATE TABLE IF NOT EXISTS produto
         FOREIGN KEY (categoria_categoria_id)
             REFERENCES categoria (categoria_id)
             ON DELETE SET NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS compra
-(
-    idcompra   BIGINT AUTO_INCREMENT PRIMARY KEY,
-
-    dataCompra DATETIME,
-    valorTotal DOUBLE,
-
-    usuario_id BIGINT NOT NULL,
-
-    CONSTRAINT fk_compra_usuario
-        FOREIGN KEY (usuario_id)
-            REFERENCES usuario (id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS itemcompra
-(
-    iditemCompra      BIGINT AUTO_INCREMENT PRIMARY KEY,
-
-    quantidade        INT,
-    valorItem         DOUBLE,
-    itemCompracol     VARCHAR(45),
-
-    compra_idcompra   BIGINT NOT NULL,
-    produto_idproduto BIGINT NOT NULL,
-
-    CONSTRAINT fk_itemcompra_compra
-        FOREIGN KEY (compra_idcompra)
-            REFERENCES compra (idcompra),
-
-    CONSTRAINT fk_itemcompra_produto
-        FOREIGN KEY (produto_idproduto)
-            REFERENCES produto (idproduto)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
@@ -219,14 +185,14 @@ VALUES ('Periféricos'),
        ('Armazenamento'),
        ('Placas-Mãe');
 
-INSERT INTO fornecedor (nome)
-VALUES ('Logitech'),
-       ('Razer'),
-       ('NVIDIA'),
-       ('Corsair'),
-       ('Kingston'),
-       ('ASUS'),
-       ('LG');
+INSERT INTO fornecedor (nome, cnpj, telefone, email)
+VALUES ('Logitech', '11.111.111/0001-11', '(11) 99999-1111', 'vendas@logitech.com'),
+       ('Razer', '22.222.222/0001-22', '(11) 99999-2222', 'contato@razer.com'),
+       ('NVIDIA', '33.333.333/0001-33', '(11) 99999-3333', 'distribuicao@nvidia.com'),
+       ('Corsair', '44.444.444/0001-44', '(11) 99999-4444', 'sales@corsair.com'),
+       ('Kingston', '55.555.555/0001-55', '(11) 99999-5555', 'b2b@kingston.com'),
+       ('ASUS', '66.666.666/0001-66', '(11) 99999-6666', 'parceiros@asus.com'),
+       ('LG', '77.777.777/0001-77', '(11) 99999-7777', 'comercial@lg.com');
 
 INSERT INTO produto
 (nome,
@@ -251,22 +217,15 @@ VALUES ('Teclado Mecânico RGB', 450.50, 25, 2, 'Switch Blue TKL', 2, 1),
        ('Volante G29 Driving Force', 1800.00, 8, 2, 'Com Pedais', 1, 1),
        ('Caixa de Som Z906', 2200.00, 4, 1, 'Surround 5.1 1000W', 1, 4);
 
-INSERT INTO compra (dataCompra, valorTotal, usuario_id)
-VALUES ('2026-05-10', 770.50, 2),
-       ('2026-05-15', 2150.00, 1),
-       ('2026-05-18', 480.89, 3);
 
-INSERT INTO itemcompra
-(quantidade,
- valorItem,
- itemCompracol,
- compra_idcompra,
- produto_idproduto)
-VALUES (1, 450.50, 'Separado', 1, 1),
-       (1, 320.00, 'Separado', 1, 2),
-       (1, 2150.00, 'Enviado', 2, 3),
-       (1, 280.90, 'Processando', 3, 4),
-       (1, 199.99, 'Processando', 3, 5);
+INSERT INTO venda (dataVenda, valorTotal, usuario_id)
+VALUES (NOW(), 13515.00, 1),
+       (DATE_SUB(NOW(), INTERVAL 10 DAY), 32250.00, 2);
+
+INSERT INTO itemvenda (quantidade, valorUnitario, subtotal, venda_idvenda, produto_idproduto)
+VALUES (30, 450.50, 13515.00, 1, 1),
+       (15, 2150.00, 32250.00, 2, 3);
+
 
 SET GLOBAL event_scheduler = ON;
 

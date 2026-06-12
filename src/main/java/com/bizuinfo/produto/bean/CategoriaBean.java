@@ -3,6 +3,7 @@ package com.bizuinfo.produto.bean;
 import com.bizuinfo.produto.dao.CategoriaDAO;
 import com.bizuinfo.produto.model.Categoria;
 import com.bizuinfo.produto.service.CategoriaService;
+import com.bizuinfo.venda.dto.SugestaoCompraDTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.faces.application.FacesMessage;
