@@ -43,9 +43,7 @@ public class Produto {
     }
 
     public String getNome() {
-        return (nome != null) ?
-                nome :
-                "Sem Categoria";
+        return nome;
     }
 
     public void setNome(String nome) {
