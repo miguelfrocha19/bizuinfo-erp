@@ -81,12 +81,12 @@ CREATE TABLE IF NOT EXISTS produto
 
 CREATE TABLE IF NOT EXISTS venda
 (
-    idvenda BIGINT AUTO_INCREMENT PRIMARY KEY,
+    idvenda    BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    dataVenda DATETIME NOT NULL,
-    valorTotal DOUBLE NOT NULL,
+    dataVenda  DATETIME NOT NULL,
+    valorTotal DOUBLE   NOT NULL,
 
-    usuario_id BIGINT NOT NULL,
+    usuario_id BIGINT   NOT NULL,
 
     CONSTRAINT fk_venda_usuario
         FOREIGN KEY (usuario_id)
@@ -97,13 +97,13 @@ CREATE TABLE IF NOT EXISTS venda
 
 CREATE TABLE IF NOT EXISTS itemvenda
 (
-    iditemVenda BIGINT AUTO_INCREMENT PRIMARY KEY,
+    iditemVenda       BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    quantidade INT NOT NULL,
-    valorUnitario DOUBLE NOT NULL,
-    subtotal DOUBLE NOT NULL,
+    quantidade        INT    NOT NULL,
+    valorUnitario     DOUBLE NOT NULL,
+    subtotal          DOUBLE NOT NULL,
 
-    venda_idvenda BIGINT NOT NULL,
+    venda_idvenda     BIGINT NOT NULL,
     produto_idproduto BIGINT NOT NULL,
 
     CONSTRAINT fk_itemvenda_venda
@@ -119,14 +119,14 @@ CREATE TABLE IF NOT EXISTS itemvenda
 
 CREATE TABLE IF NOT EXISTS pagamento
 (
-    idpagamento BIGINT AUTO_INCREMENT PRIMARY KEY,
+    idpagamento     BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    valor DOUBLE NOT NULL,
+    valor           DOUBLE      NOT NULL,
 
-    formaPagamento VARCHAR(30) NOT NULL,
+    formaPagamento  VARCHAR(30) NOT NULL,
     statusPagamento VARCHAR(30) NOT NULL,
 
-    venda_idvenda BIGINT NOT NULL,
+    venda_idvenda   BIGINT      NOT NULL,
 
     CONSTRAINT fk_pagamento_venda
         FOREIGN KEY (venda_idvenda)
@@ -226,6 +226,13 @@ INSERT INTO itemvenda (quantidade, valorUnitario, subtotal, venda_idvenda, produ
 VALUES (30, 450.50, 13515.00, 1, 1),
        (15, 2150.00, 32250.00, 2, 3);
 
+INSERT INTO pagamento
+(valor,
+ formaPagamento,
+ statusPagamento,
+ venda_idvenda)
+VALUES (13515.00, 'PIX', 'APROVADO', 1),
+       (32250.00, 'CARTAO_CREDITO', 'APROVADO', 2);
 
 SET GLOBAL event_scheduler = ON;
 
